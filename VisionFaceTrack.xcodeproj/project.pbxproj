@@ -1,0 +1,491 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		288FF80C206DB231000932BA /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 288FF80B206DB231000932BA /* README.md */; };
+		28C69F49204F6ACA00949F30 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28C69F48204F6ACA00949F30 /* AppDelegate.swift */; };
+		28C69F4B204F6ACA00949F30 /* FaceDetectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28C69F4A204F6ACA00949F30 /* FaceDetectionController.swift */; };
+		28C69F4E204F6ACA00949F30 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28C69F4C204F6ACA00949F30 /* Main.storyboard */; };
+		28C69F50204F6ACA00949F30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28C69F4F204F6ACA00949F30 /* Assets.xcassets */; };
+		28C69F53204F6ACA00949F30 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28C69F51204F6ACA00949F30 /* LaunchScreen.storyboard */; };
+		3725DF0825F3FB03002D9C0E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3725DF0725F3FB03002D9C0E /* HomeViewController.swift */; };
+		37DF794826019C180032C225 /* FaceDetection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37DF794626019C180032C225 /* FaceDetection.storyboard */; };
+		37DF794C2606774A0032C225 /* AngleInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DF794B260677490032C225 /* AngleInfoViewController.swift */; };
+		37DF794F260678420032C225 /* TiltViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DF794E260678420032C225 /* TiltViewController.swift */; };
+		37DF795426079C910032C225 /* VerticalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DF795326079C910032C225 /* VerticalViewController.swift */; };
+		37DF795C2607FB560032C225 /* colorfulStreak.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 37DF794226019B700032C225 /* colorfulStreak.m4v */; };
+		E1F2A12081F0BFCAB8D4EF95 /* Pods_VisionFaceTrack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3E39233405EE793FDAE4E15 /* Pods_VisionFaceTrack.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		288FF80B206DB231000932BA /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		28C69F45204F6ACA00949F30 /* VisionFaceTrack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisionFaceTrack.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		28C69F48204F6ACA00949F30 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		28C69F4A204F6ACA00949F30 /* FaceDetectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceDetectionController.swift; sourceTree = "<group>"; };
+		28C69F4D204F6ACA00949F30 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		28C69F4F204F6ACA00949F30 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		28C69F52204F6ACA00949F30 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		28C69F54204F6ACA00949F30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3008CCAF6722CB9E197E4E81 /* Pods-VisionFaceTrack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionFaceTrack.debug.xcconfig"; path = "Target Support Files/Pods-VisionFaceTrack/Pods-VisionFaceTrack.debug.xcconfig"; sourceTree = "<group>"; };
+		3725DF0725F3FB03002D9C0E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		37DF794226019B700032C225 /* colorfulStreak.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; name = colorfulStreak.m4v; path = "../../../../Downloads/CALayer-Materials/starter/LayerPlayer/Supporting Files/colorfulStreak.m4v"; sourceTree = "<group>"; };
+		37DF794726019C180032C225 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = VisionFaceTrack/Views/Base.lproj/FaceDetection.storyboard; sourceTree = "<group>"; };
+		37DF794B260677490032C225 /* AngleInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AngleInfoViewController.swift; sourceTree = "<group>"; };
+		37DF794E260678420032C225 /* TiltViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TiltViewController.swift; sourceTree = "<group>"; };
+		37DF795326079C910032C225 /* VerticalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalViewController.swift; sourceTree = "<group>"; };
+		4231095939659F544A7FE2D5 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		5F07BB15BDCB081D94DCBAC9 /* Pods-VisionFaceTrack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionFaceTrack.release.xcconfig"; path = "Target Support Files/Pods-VisionFaceTrack/Pods-VisionFaceTrack.release.xcconfig"; sourceTree = "<group>"; };
+		F3E39233405EE793FDAE4E15 /* Pods_VisionFaceTrack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisionFaceTrack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F768C173AC32106E22037F17 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		28C69F42204F6ACA00949F30 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1F2A12081F0BFCAB8D4EF95 /* Pods_VisionFaceTrack.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2207EA02D23BDB5081DFC66D /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				F768C173AC32106E22037F17 /* SampleCode.xcconfig */,
+			);
+			name = Configuration;
+			sourceTree = "<group>";
+		};
+		28C69F3C204F6ACA00949F30 = {
+			isa = PBXGroup;
+			children = (
+				288FF80B206DB231000932BA /* README.md */,
+				28C69F47204F6ACA00949F30 /* VisionFaceTrack */,
+				28C69F46204F6ACA00949F30 /* Products */,
+				2207EA02D23BDB5081DFC66D /* Configuration */,
+				68FAA60D8CCF0656E84C4137 /* LICENSE */,
+				89D92ED245CD01950919BEF4 /* Pods */,
+				6202A84635F286ED22DE5E62 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		28C69F46204F6ACA00949F30 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				28C69F45204F6ACA00949F30 /* VisionFaceTrack.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		28C69F47204F6ACA00949F30 /* VisionFaceTrack */ = {
+			isa = PBXGroup;
+			children = (
+				28C69F54204F6ACA00949F30 /* Info.plist */,
+				37DF794126019B630032C225 /* Supporting Files */,
+				37DF794026019B3E0032C225 /* Views */,
+				37DF793E260199140032C225 /* Controllers */,
+			);
+			path = VisionFaceTrack;
+			sourceTree = "<group>";
+		};
+		37DF793E260199140032C225 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				28C69F48204F6ACA00949F30 /* AppDelegate.swift */,
+				3725DF0725F3FB03002D9C0E /* HomeViewController.swift */,
+				28C69F4A204F6ACA00949F30 /* FaceDetectionController.swift */,
+				37DF794B260677490032C225 /* AngleInfoViewController.swift */,
+				37DF794E260678420032C225 /* TiltViewController.swift */,
+				37DF795326079C910032C225 /* VerticalViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		37DF794026019B3E0032C225 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				37DF794626019C180032C225 /* FaceDetection.storyboard */,
+				28C69F4C204F6ACA00949F30 /* Main.storyboard */,
+				28C69F51204F6ACA00949F30 /* LaunchScreen.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		37DF794126019B630032C225 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				28C69F4F204F6ACA00949F30 /* Assets.xcassets */,
+				37DF794226019B700032C225 /* colorfulStreak.m4v */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6202A84635F286ED22DE5E62 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F3E39233405EE793FDAE4E15 /* Pods_VisionFaceTrack.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		68FAA60D8CCF0656E84C4137 /* LICENSE */ = {
+			isa = PBXGroup;
+			children = (
+				4231095939659F544A7FE2D5 /* LICENSE.txt */,
+			);
+			path = LICENSE;
+			sourceTree = "<group>";
+		};
+		89D92ED245CD01950919BEF4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3008CCAF6722CB9E197E4E81 /* Pods-VisionFaceTrack.debug.xcconfig */,
+				5F07BB15BDCB081D94DCBAC9 /* Pods-VisionFaceTrack.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		28C69F44204F6ACA00949F30 /* VisionFaceTrack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28C69F57204F6ACA00949F30 /* Build configuration list for PBXNativeTarget "VisionFaceTrack" */;
+			buildPhases = (
+				DF230BB4D621D53C97C1D585 /* [CP] Check Pods Manifest.lock */,
+				28C69F41204F6ACA00949F30 /* Sources */,
+				28C69F42204F6ACA00949F30 /* Frameworks */,
+				28C69F43204F6ACA00949F30 /* Resources */,
+				B2531F196EDCE0E339D5260B /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VisionFaceTrack;
+			productName = VisionFaceTrack;
+			productReference = 28C69F45204F6ACA00949F30 /* VisionFaceTrack.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		28C69F3D204F6ACA00949F30 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 1240;
+				ORGANIZATIONNAME = Apple;
+				TargetAttributes = {
+					28C69F44204F6ACA00949F30 = {
+						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1140;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 28C69F40204F6ACA00949F30 /* Build configuration list for PBXProject "VisionFaceTrack" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 28C69F3C204F6ACA00949F30;
+			productRefGroup = 28C69F46204F6ACA00949F30 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				28C69F44204F6ACA00949F30 /* VisionFaceTrack */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		28C69F43204F6ACA00949F30 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37DF795C2607FB560032C225 /* colorfulStreak.m4v in Resources */,
+				28C69F53204F6ACA00949F30 /* LaunchScreen.storyboard in Resources */,
+				28C69F50204F6ACA00949F30 /* Assets.xcassets in Resources */,
+				288FF80C206DB231000932BA /* README.md in Resources */,
+				37DF794826019C180032C225 /* FaceDetection.storyboard in Resources */,
+				28C69F4E204F6ACA00949F30 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B2531F196EDCE0E339D5260B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VisionFaceTrack/Pods-VisionFaceTrack-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/youtube-ios-player-helper/youtube_ios_player_helper.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/youtube_ios_player_helper.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VisionFaceTrack/Pods-VisionFaceTrack-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DF230BB4D621D53C97C1D585 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VisionFaceTrack-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		28C69F41204F6ACA00949F30 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37DF794F260678420032C225 /* TiltViewController.swift in Sources */,
+				28C69F4B204F6ACA00949F30 /* FaceDetectionController.swift in Sources */,
+				37DF795426079C910032C225 /* VerticalViewController.swift in Sources */,
+				28C69F49204F6ACA00949F30 /* AppDelegate.swift in Sources */,
+				37DF794C2606774A0032C225 /* AngleInfoViewController.swift in Sources */,
+				3725DF0825F3FB03002D9C0E /* HomeViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		28C69F4C204F6ACA00949F30 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				28C69F4D204F6ACA00949F30 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		28C69F51204F6ACA00949F30 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				28C69F52204F6ACA00949F30 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		37DF794626019C180032C225 /* FaceDetection.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				37DF794726019C180032C225 /* Base */,
+			);
+			name = FaceDetection.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		28C69F55204F6ACA00949F30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		28C69F56204F6ACA00949F30 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		28C69F58204F6ACA00949F30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3008CCAF6722CB9E197E4E81 /* Pods-VisionFaceTrack.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3K553324P2;
+				INFOPLIST_FILE = "$(SRCROOT)/VisionFaceTrack/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.VisionFaceTrack1";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		28C69F59204F6ACA00949F30 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5F07BB15BDCB081D94DCBAC9 /* Pods-VisionFaceTrack.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3K553324P2;
+				INFOPLIST_FILE = "$(SRCROOT)/VisionFaceTrack/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.VisionFaceTrack1";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		28C69F40204F6ACA00949F30 /* Build configuration list for PBXProject "VisionFaceTrack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28C69F55204F6ACA00949F30 /* Debug */,
+				28C69F56204F6ACA00949F30 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28C69F57204F6ACA00949F30 /* Build configuration list for PBXNativeTarget "VisionFaceTrack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28C69F58204F6ACA00949F30 /* Debug */,
+				28C69F59204F6ACA00949F30 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 28C69F3D204F6ACA00949F30 /* Project object */;
+}

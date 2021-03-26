@@ -1,0 +1,20 @@
+PODS:
+  - Alamofire (5.4.1)
+  - youtube-ios-player-helper (1.0.3)
+
+DEPENDENCIES:
+  - Alamofire
+  - youtube-ios-player-helper
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - youtube-ios-player-helper
+
+SPEC CHECKSUMS:
+  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
+  youtube-ios-player-helper: 0185c57db23c80d63d6ca11251d110abb8a4ca61
+
+PODFILE CHECKSUM: c99c966c30432e8264441fabf740b4d8361ea3b2
+
+COCOAPODS: 1.10.1
