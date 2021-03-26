@@ -21,7 +21,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     @IBOutlet weak var playButton: UIButton!
     // @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var videoView: YTPlayerView!
-    @IBOutlet weak var testLab: UILabel!
     
     
     // AVCapture variables to hold sequence data
@@ -61,6 +60,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
 //    var acceptableUpRange: Float = 1.0
     var outTiltLeft = false
     var outTiltRight = false
+    var prevOutOfRange = false
     
     // Feedback indicators for up + down movement
 //    var fromLeftForCalibration: [CGFloat] = []
@@ -83,7 +83,9 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     
     // Feedback indicators left and right
     var calibratedLeftEyeXPos: Float = 0.0
-    var leftEyeXPosForCalbration: [CGFloat] = []
+    var leftEyeXPosForCalibration: [CGFloat] = []
+    
+    var prevAnimationType: Int = 0
     
     // AV Player
     // var videoPreviewLayer: AVCaptureVideoPreviewLayer?
@@ -484,14 +486,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         }
     }
     
-    fileprivate func addPointsNonNorm(in pointsArr: [CGPoint], to path: CGMutablePath) {
-        let pointCount = pointsArr.count
-        if pointCount > 1 {
-            path.move(to: pointsArr[0])
-            path.addLines(between: pointsArr)
-        }
-    }
-    
     fileprivate func addIndicators(to faceRectanglePath: CGMutablePath, faceLandmarksPath: CGMutablePath, linePath: CGMutablePath, for faceObservation: VNFaceObservation) {
         let displaySize = self.captureDeviceResolution
         
@@ -547,7 +541,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             let rightCorner = CGPoint(x: displaySize.width, y: 0.0)
             
             let tempAngle = self.angleBetweenThreePoints(center: leftist, firstPoint: anchor, secondPoint: rightist)
-            
             let fromLeftAngle = self.angleBetweenThreePoints(center: leftCorner, firstPoint: leftNorm, secondPoint: rightCorner)
             let fromRightAngle = self.angleBetweenThreePoints(center: rightCorner, firstPoint: leftCorner, secondPoint: rightNorm)
             print("FromLeftAngle: \(fromLeftAngle)")
@@ -581,12 +574,10 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
                 self.calibratedFaceOutline = landmarks.faceContour
                 self.calibratedAffineTransform = affineTransform
                 self.leftEyeHeightsForCalibration.append(leftNorm.y)
-                self.leftEyeXPosForCalbration.append(leftNorm.x)
+                self.leftEyeXPosForCalibration.append(leftNorm.x)
             }
             if (self.calibrated) {
-                self.checkRange(currAngle: runningAvg, currLeftAngle: angleFL, currRightAngle: angleFR)
-                self.checkYPos(currPos: Float(leftNorm.y))
-                self.checkXPos(currPos: Float(leftNorm.x))
+                self.checkPosition(currAngle: runningAvg, currXPos: Float(leftNorm.x), currYPos: Float(leftNorm.y))
                 if let calibratedFace = self.calibratedFaceOutline {
                     if let calibratedAT = self.calibratedAffineTransform {
                         self.addPoints(in: calibratedFace, to: linePath, applying: calibratedAT, closingWhenComplete: false)
@@ -761,11 +752,12 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         self.anglesTiltForCalibration.removeAll()
 //        self.fromLeftForCalibration.removeAll()
 //        self.fromRightForCalibration.removeAll()
-        self.leftEyeXPosForCalbration.removeAll()
+        self.leftEyeXPosForCalibration.removeAll()
         self.leftEyeHeightsForCalibration.removeAll()
         self.widthsForCalibration.removeAll()
         self.heightsForCalibration.removeAll()
         warningFeedback.text = "CALIBRATING..."
+        arrowImage.image = nil
         self.isCalibrating = true
         self.calibrated = false
         _ = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
@@ -823,7 +815,7 @@ extension FaceDetectionController {
         self.calibratedWidth = calcAverage(numArr: self.widthsForCalibration)
         self.calibratedHeight = calcAverage(numArr: self.heightsForCalibration)
         self.calibratedLeftEyeYPos = calcAverage(numArr: self.leftEyeHeightsForCalibration)
-        self.calibratedLeftEyeXPos = calcAverage(numArr: self.leftEyeXPosForCalbration)
+        self.calibratedLeftEyeXPos = calcAverage(numArr: self.leftEyeXPosForCalibration)
         
         self.sendTiltData(text: String(format: "%.2f", self.calibratedTiltAngle), calibrated: true)
 //        self.sendVertData(textLeft: String(format: "%.2f", self.calibratedfromLeftAngle),
@@ -844,156 +836,182 @@ extension FaceDetectionController {
         return Float(sum) / Float(count)
     }
     
-    fileprivate func checkYPos(currPos: Float) {
-        if (self.calibrated) {
-            let range = (1 - self.acceptableProp) * self.calibratedHeight
-            if (currPos > self.calibratedLeftEyeYPos + range) {
-                testLab.text = "TILT DOWN"
-            }
-            else if (currPos < self.calibratedLeftEyeYPos - range) {
-                testLab.text = "TILT UP"
-            }
-            else {
-                testLab.text = "GOOD"
-            }
-        }
-    }
-    
-    fileprivate func checkXPos(currPos: Float) {
-        if (self.calibrated) {
-            let range = (1 - self.acceptableProp) * self.calibratedWidth
-            if (currPos > self.calibratedLeftEyeXPos + range) {
-                testLab.text = "TURN RIGHT"
-            }
-            else if (currPos < self.calibratedLeftEyeXPos - range) {
-                testLab.text = "TURN LEFT"
-            }
-            else {
-                testLab.text = "GOOD"
+    fileprivate func checkPosition(currAngle: Float, currXPos: Float, currYPos: Float) {
+        let outHorizontal = !(self.checkXPosInRange(currPos: currXPos))
+        let outVertical = !(self.checkYPosInRange(currPos: currYPos))
+        let outTilt = !(self.checkTiltInRange(currAngle: currAngle))
+        
+        
+        if ((outHorizontal || outVertical || outTilt) && !prevOutOfRange) {
+            _ = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
+                if (self.prevOutOfRange) {
+                    if (self.vidIsOpen) {
+                        self.rootLayer?.isHidden = false
+                    }
+                }
             }
         }
-    }
-    
-    fileprivate func checkRange(currAngle: Float, currLeftAngle: Float, currRightAngle: Float) {
-        if (self.calibrated) {
-            self.checkTiltRange(currAngle: currAngle)
-            // self.checkVerticalRange(currLeftAngle: currLeftAngle, currRightAngle: currRightAngle)
-            if (!self.outTiltLeft && !self.outTiltRight && !self.outDown && !self.outUp) {
-                warningFeedback.text = "GOOD JOB!"
-                arrowImage.image = UIImage(systemName: "face.smiling")
-                arrowImage.tintColor = .systemYellow
-                self.animateArrows(animationType: 0)
+        if (outHorizontal || outVertical || outTilt) {
+            prevOutOfRange = true
+        }
+        if (outHorizontal) {
+            if (self.outLeft) {
+                warningFeedback.text = "TURN RIGHT"
+                arrowImage.image = UIImage(systemName: "arrow.right")
+                arrowImage.tintColor = .black
+                if (prevAnimationType != 2) {
+                    self.animateArrows(animationType: 0)
+                }
+                self.animateArrows(animationType: 2)
+                prevAnimationType = 2
             }
-            else {
-                warningFeedback.text = "RETURN TO POSITION"
+            else if (self.outRight) {
+                warningFeedback.text = "TURN LEFT"
+                arrowImage.image = UIImage(systemName: "arrow.left")
+                arrowImage.tintColor = .black
+                if (prevAnimationType != 1) {
+                    self.animateArrows(animationType: 0)
+                }
+                self.animateArrows(animationType: 1)
+                prevAnimationType = 1
             }
-
-        }
-    }
-    
-    fileprivate func checkTiltRange(currAngle: Float) {
-        if ((currAngle > self.calibratedTiltAngle + self.acceptableRange) && self.outTiltRight) {
-            return
-        }
-        if ((currAngle < self.calibratedTiltAngle - self.acceptableRange) && self.outTiltLeft) {
-            return
-        }
-        if (currAngle > self.calibratedTiltAngle + self.acceptableRange) {
-            // warningFeedback.text = "WARNING TILT LEFT"
-            // outerView.backgroundColor = UIColor.systemRed
-            arrowImage.image = UIImage(systemName: "arrow.left")
-            arrowImage.tintColor = .black
-            
-            self.animateArrows(animationType: 1)
             if (self.vidIsOpen) {
                 // self.player?.rate = 0.0
                 videoView.pauseVideo()
             }
-            
-            self.outTiltRight = true
-
         }
-        else if (currAngle < self.calibratedTiltAngle - self.acceptableRange) {
-            // warningFeedback.text = "WARNING TILT RIGHT"
-            // outerView.backgroundColor = UIColor.systemRed
-            arrowImage.image = UIImage(systemName: "arrow.right")
-            arrowImage.tintColor = .black
-
-            self.animateArrows(animationType: 2)
+        else if (outVertical) {
+            if (self.outUp) {
+                warningFeedback.text = "TILT DOWN"
+                arrowImage.image = UIImage(systemName: "arrow.down")
+                arrowImage.tintColor = .black
+                if (prevAnimationType != 3) {
+                    self.animateArrows(animationType: 0)
+                }
+                self.animateArrows(animationType: 3)
+                prevAnimationType = 3
+            }
+            else if (self.outDown) {
+                warningFeedback.text = "TILT UP"
+                arrowImage.image = UIImage(systemName: "arrow.up")
+                arrowImage.tintColor = .black
+                if (prevAnimationType != 4) {
+                    self.animateArrows(animationType: 0)
+                }
+                self.animateArrows(animationType: 4)
+                prevAnimationType = 4
+            }
             if (self.vidIsOpen) {
                 // self.player?.rate = 0.0
                 videoView.pauseVideo()
             }
-            
-            self.outTiltLeft = true
+        }
+        else if (outTilt) {
+            if (self.outTiltLeft) {
+                warningFeedback.text = "TILT RIGHT"
+                if (prevAnimationType != 2) {
+                    self.animateArrows(animationType: 0)
+                }
+                arrowImage.image = UIImage(systemName: "arrow.right")
+                arrowImage.tintColor = .black
+                self.animateArrows(animationType: 2)
+                prevAnimationType = 2
+            }
+            else if (self.outTiltRight) {
+                warningFeedback.text = "TILT LEFT"
+                arrowImage.image = UIImage(systemName: "arrow.left")
+                arrowImage.tintColor = .black
+                if (prevAnimationType != 1) {
+                    self.animateArrows(animationType: 0)
+                }
+                self.animateArrows(animationType: 1)
+                prevAnimationType = 1
+            }
+            if (self.vidIsOpen) {
+                // self.player?.rate = 0.0
+                videoView.pauseVideo()
+            }
         }
         else {
-            // warningFeedback.text = "GOOD JOB"
-            // outerView.backgroundColor = UIColor.white
-            // arrowImage.image = UIImage(systemName: "face.smiling")
-            // arrowImage.tintColor = .systemYellow
+            warningFeedback.text = "GOOD JOB!"
+            arrowImage.image = UIImage(systemName: "face.smiling")
+            arrowImage.tintColor = .systemYellow
+            self.animateArrows(animationType: 0)
             if (self.vidIsOpen) {
-                // self.player?.rate = 1.0
+                // self.player?.rate = 0.0
+                self.rootLayer?.isHidden = true
                 videoView.playVideo()
             }
-            // self.animateArrows(animationType: 0)
-            self.outTiltRight = false
-            self.outTiltLeft = false
-            
+            prevOutOfRange = false
         }
         
     }
     
-//    fileprivate func checkVerticalRange(currLeftAngle: Float, currRightAngle: Float) {
-//        if (currRightAngle > self.calibratedfromRightAngle + self.acceptableUpRange && currLeftAngle > self.calibratedfromLeftAngle + self.acceptableUpRange)  {
-//            if (self.outUp) {
-//                return
-//            }
-//            // warningFeedback.text = "WARNING TILT DOWN"
-//            // outerView.backgroundColor = UIColor.systemRed
-//            arrowImage.image = UIImage(systemName: "arrow.down")
-//            arrowImage.tintColor = .black
-//
-//            self.animateArrows(animationType: 3)
-//            if (self.vidIsOpen) {
-//                videoView.pauseVideo()
-//                //self.player?.rate = 0.0
-//            }
-//            self.outUp = true
-//
-//        }
-//        else if (currRightAngle < self.calibratedfromRightAngle - self.acceptableRange && currLeftAngle < self.calibratedfromLeftAngle - self.acceptableRange)  {
-//            if (self.outDown) {
-//                return
-//            }
-//            // warningFeedback.text = "WARNING TILT UP"
-//            // outerView.backgroundColor = UIColor.systemRed
-//            arrowImage.image = UIImage(systemName: "arrow.up")
-//            arrowImage.tintColor = .black
-//
-//            self.animateArrows(animationType: 4)
-//            if (self.vidIsOpen) {
-//                videoView.pauseVideo()
-//                //self.player?.rate = 0.0
-//            }
-//            self.outDown = true
-//
-//        }
-//        else {
-//            // warningFeedback.text = "GOOD JOB"
-//            // outerView.backgroundColor = UIColor.white
-//            // arrowImage.image = UIImage(systemName: "face.smiling")
-//            // arrowImage.tintColor = .systemYellow
-//            if (self.vidIsOpen) {
-//                // self.player?.rate = 1.0
-//                videoView.playVideo()
-//            }
-//            // self.animateArrows(animationType: 5)
-//            self.outUp = false
-//            self.outDown = false
-//
-//        }
-//    }
+    fileprivate func checkYPosInRange(currPos: Float) -> Bool {
+        if (self.calibrated) {
+            let range = (1 - self.acceptableProp) * self.calibratedHeight
+            if (currPos > self.calibratedLeftEyeYPos + range) {
+                self.outUp = true
+            }
+            else if (currPos < self.calibratedLeftEyeYPos - range) {
+                self.outDown = true
+            }
+            else {
+                self.outUp = false
+                self.outDown = false
+            }
+        }
+        
+        if (!self.outUp && !self.outDown) {
+            return true
+        }
+        return false
+    }
+    
+    fileprivate func checkXPosInRange(currPos: Float) -> Bool {
+        if (self.calibrated) {
+            let range = (1 - self.acceptableProp) * self.calibratedWidth
+            if (currPos > self.calibratedLeftEyeXPos + range) {
+                self.outRight = true
+            }
+            else if (currPos < self.calibratedLeftEyeXPos - range) {
+                self.outLeft = true
+            }
+            else {
+                self.outRight = false
+                self.outLeft = false
+            }
+        }
+        if (!self.outRight && !self.outLeft) {
+            return true
+        }
+        return false
+    }
+    
+    fileprivate func checkTiltInRange(currAngle: Float) -> Bool {
+        if (self.calibrated) {
+            if ((currAngle > self.calibratedTiltAngle + self.acceptableRange) && self.outTiltRight) {
+                return false
+            }
+            if ((currAngle < self.calibratedTiltAngle - self.acceptableRange) && self.outTiltLeft) {
+                return false
+            }
+            if (currAngle > self.calibratedTiltAngle + self.acceptableRange) {
+                self.outTiltRight = true
+            }
+            else if (currAngle < self.calibratedTiltAngle - self.acceptableRange) {
+                self.outTiltLeft = true
+            }
+            else {
+                self.outTiltRight = false
+                self.outTiltLeft = false
+            }
+        }
+        if (!self.outTiltLeft && !self.outTiltRight) {
+            return true
+        }
+        return false
+    }
     
     fileprivate func updatePlayButtonTitle(isPlaying: Bool) {
       if isPlaying {
@@ -1047,12 +1065,6 @@ extension FaceDetectionController {
                         return
                     })
                 }
-                if (animationType == 5) {
-                    UIView.animate(withDuration: 1, delay: 0, animations: {
-                        self.arrowImage.transform = .identity
-                        return
-                    })
-                }
                 UIView.animate(withDuration: 3, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: [.curveEaseOut, .repeat], animations: {
                     switch animationType {
                     case 0:
@@ -1070,12 +1082,12 @@ extension FaceDetectionController {
                     case 4: // down
                         self.arrowImage.transform = CGAffineTransform(translationX: 0, y: -50)
                         break
-                    case 5:
-                        self.arrowImage.transform = .identity
                     default:
                         break
                     }
-                }, completion: nil)
+                }, completion: {(finished:Bool) in
+                    // the code you put here will be compiled once the animation finishes
+                })
             }
 
         }
