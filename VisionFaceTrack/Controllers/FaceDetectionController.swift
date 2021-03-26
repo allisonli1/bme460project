@@ -18,19 +18,10 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     @IBOutlet weak var warningFeedback: UILabel!
     @IBOutlet var outerView: UIView!
     @IBOutlet weak var arrowImage: UIImageView!
-    @IBOutlet weak var UDArrowImage: UIImageView!
     @IBOutlet weak var playButton: UIButton!
     // @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var videoView: YTPlayerView!
-    
-    @IBOutlet weak var arrowStackView: UIStackView!
-    @IBOutlet weak var cameraHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var cameraWidthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var cameraCenterYConstraint: NSLayoutConstraint!
-    @IBOutlet weak var cameraCenterXConstraint: NSLayoutConstraint!
-    @IBOutlet weak var cameraCornerYConstraint: NSLayoutConstraint!
-    @IBOutlet weak var cameraCornerXConstraint: NSLayoutConstraint!
-    
+    @IBOutlet weak var testLab: UILabel!
     
     
     // AVCapture variables to hold sequence data
@@ -50,6 +41,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var detectedFaceLandmarksShapeLayer: CAShapeLayer?
     var detectedLineLayer: CAShapeLayer?
     
+    
     // Vision requests
     private var detectionRequests: [VNDetectFaceRectanglesRequest]?
     private var trackingRequests: [VNTrackObjectRequest]?
@@ -57,23 +49,41 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     lazy var sequenceRequestHandler = VNSequenceRequestHandler()
     
     var runningAvgArr: [Float] = []
-    var runningAvgSum: Float = -1
+    var runningAvg: Float = -1
     // Feedback indicators for tilting head
+    var calibratedFaceOutline: VNFaceLandmarkRegion2D?
+    var calibratedAffineTransform: CGAffineTransform?
     var anglesTiltForCalibration: [CGFloat] = []
     var calibratedTiltAngle: Float = 0.0
     var calibrated: Bool = false
     var isCalibrating = false
-    var acceptableRange: Float = 2.0
+    var acceptableRange: Float = 4.0
+//    var acceptableUpRange: Float = 1.0
     var outTiltLeft = false
     var outTiltRight = false
     
     // Feedback indicators for up + down movement
-    var fromLeftForCalibration: [CGFloat] = []
-    var fromRightForCalibration: [CGFloat] = []
-    var calibratedfromLeftAngle: Float = 0.0
-    var calibratedfromRightAngle: Float = 0.0
+//    var fromLeftForCalibration: [CGFloat] = []
+//    var fromRightForCalibration: [CGFloat] = []
+//    var calibratedfromLeftAngle: Float = 0.0
+//    var calibratedfromRightAngle: Float = 0.0
     var outDown = false
     var outUp = false
+    var outRight = false
+    var outLeft = false
+    
+    // Feedback indicators up and down
+    var calibratedWidth: Float = 0.0
+    var calibratedHeight: Float = 0.0
+    var widthsForCalibration: [CGFloat] = []
+    var heightsForCalibration: [CGFloat] = []
+    var acceptableProp: Float = 0.9
+    var calibratedLeftEyeYPos: Float = 0.0
+    var leftEyeHeightsForCalibration: [CGFloat] = []
+    
+    // Feedback indicators left and right
+    var calibratedLeftEyeXPos: Float = 0.0
+    var leftEyeXPosForCalbration: [CGFloat] = []
     
     // AV Player
     // var videoPreviewLayer: AVCaptureVideoPreviewLayer?
@@ -84,8 +94,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var player: AVPlayer? {
       return playerLayer?.player
     }
-    
-    // Constraints
 
  
     // MARK: UIViewController overrides
@@ -104,7 +112,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         // Initializing UI text
         warningFeedback.text = ""
         self.updatePlayButtonTitle(isPlaying: false)
-        
         
     }
     
@@ -385,8 +392,8 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         detectedLineLayer.anchorPoint = normalizedCenterPoint
         detectedLineLayer.position = captureDeviceBoundsCenterPoint
         detectedLineLayer.fillColor = nil
-        detectedLineLayer.strokeColor = UIColor.blue.withAlphaComponent(0.7).cgColor
-        detectedLineLayer.lineWidth = 3
+        detectedLineLayer.strokeColor = UIColor.yellow.withAlphaComponent(0.7).cgColor
+        detectedLineLayer.lineWidth = 10
         detectedLineLayer.shadowOpacity = 0.7
         detectedLineLayer.shadowRadius = 5
         
@@ -501,7 +508,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             let openLandmarkRegions: [VNFaceLandmarkRegion2D?] = [
                 landmarks.leftEyebrow,
                 landmarks.rightEyebrow,
-                landmarks.faceContour,
+                // landmarks.faceContour,
                 landmarks.noseCrest,
                 landmarks.medianLine
             ]
@@ -527,9 +534,9 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             let pointsR: [CGPoint] = rightEye!.normalizedPoints
             let leftist: CGPoint = pointsL[0]
             let rightist: CGPoint = pointsR[0]
-            let myLine: [CGPoint] = [leftist, rightist]
+            // let myLine: [CGPoint] = [leftist, rightist]
             let anchor: CGPoint = CGPoint.init(x: leftist.x, y: 2*leftist.y)
-            let anchorLine: [CGPoint] = [leftist, anchor]
+            // let anchorLine: [CGPoint] = [leftist, anchor]
             
             let captureDeviceResolution = self.captureDeviceResolution
             print(captureDeviceResolution.height)
@@ -539,20 +546,15 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             let leftCorner = CGPoint(x: 0.0, y: 0.0)
             let rightCorner = CGPoint(x: displaySize.width, y: 0.0)
             
-            // print(testPoint)
-            // let testLine: [CGPoint] = [leftist, origin]
-            
-            //print(overlayLayer!.anchorPoint)
-            self.addPointsforLine(in: myLine, to: linePath, applying: affineTransform, closingWhenComplete: false)
-            self.addPointsforLine(in: anchorLine, to: linePath, applying: affineTransform, closingWhenComplete: false)
-            // self.addPointsNonNorm(in: testLine, to: linePath)
-            
             let tempAngle = self.angleBetweenThreePoints(center: leftist, firstPoint: anchor, secondPoint: rightist)
             
             let fromLeftAngle = self.angleBetweenThreePoints(center: leftCorner, firstPoint: leftNorm, secondPoint: rightCorner)
             let fromRightAngle = self.angleBetweenThreePoints(center: rightCorner, firstPoint: leftCorner, secondPoint: rightNorm)
             print("FromLeftAngle: \(fromLeftAngle)")
             print("FromRightAngle: \(fromRightAngle)")
+            print("Width: \(faceBounds.size.width)")
+            print("Height: \(faceBounds.size.height)")
+            print("Left Eye: \(leftNorm.y)")
             
             let angleTilt = Float(tempAngle)
             let angleFL = Float(fromLeftAngle)
@@ -563,20 +565,34 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
                 runningAvgArr.remove(at: 0)
             }
             runningAvgArr.append(angleTilt)
-            runningAvgSum = calcAverage(numArr: runningAvgArr)
+            runningAvg = calcAverage(numArr: runningAvgArr)
             
-            self.sendTiltData(text: String(format: "%.2f", runningAvgSum), calibrated: false)
+            self.sendTiltData(text: String(format: "%.2f", runningAvg), calibrated: false)
             self.sendVertData(textLeft: String(format: "%.2f", angleFL),
                               textRight: String(format: "%.2f", angleFR),
                               calibrated: false)
             
             if (self.isCalibrating) {
                 self.anglesTiltForCalibration.append(tempAngle)
-                self.fromLeftForCalibration.append(fromLeftAngle)
-                self.fromRightForCalibration.append(fromRightAngle)
+//                self.fromLeftForCalibration.append(fromLeftAngle)
+//                self.fromRightForCalibration.append(fromRightAngle)
+                self.widthsForCalibration.append(faceBounds.size.width)
+                self.heightsForCalibration.append(faceBounds.size.height)
+                self.calibratedFaceOutline = landmarks.faceContour
+                self.calibratedAffineTransform = affineTransform
+                self.leftEyeHeightsForCalibration.append(leftNorm.y)
+                self.leftEyeXPosForCalbration.append(leftNorm.x)
             }
             if (self.calibrated) {
-                self.checkRange(currAngle: runningAvgSum, currLeftAngle: angleFL, currRightAngle: angleFR)
+                self.checkRange(currAngle: runningAvg, currLeftAngle: angleFL, currRightAngle: angleFR)
+                self.checkYPos(currPos: Float(leftNorm.y))
+                self.checkXPos(currPos: Float(leftNorm.x))
+                if let calibratedFace = self.calibratedFaceOutline {
+                    if let calibratedAT = self.calibratedAffineTransform {
+                        self.addPoints(in: calibratedFace, to: linePath, applying: calibratedAT, closingWhenComplete: false)
+                    }
+                }
+
             }
            
         }
@@ -743,15 +759,18 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     // MARK: Actions
     @IBAction func calibrate(_ sender: UIButton) {
         self.anglesTiltForCalibration.removeAll()
-        self.fromLeftForCalibration.removeAll()
-        self.fromRightForCalibration.removeAll()
+//        self.fromLeftForCalibration.removeAll()
+//        self.fromRightForCalibration.removeAll()
+        self.leftEyeXPosForCalbration.removeAll()
+        self.leftEyeHeightsForCalibration.removeAll()
+        self.widthsForCalibration.removeAll()
+        self.heightsForCalibration.removeAll()
         warningFeedback.text = "CALIBRATING..."
         self.isCalibrating = true
         self.calibrated = false
         _ = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
             self.fixAngle()
             self.isCalibrating = false
-            
         }
     }
     
@@ -764,13 +783,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             self.rootLayer?.isHidden = true
             self.videoRootLayer?.isHidden = false
             self.playerLayer?.isHidden = false
-//            cameraWidthConstraint.constant = 100
-//            cameraHeightConstraint.constant = 150
-//            cameraCenterYConstraint.isActive = false
-//            cameraCornerYConstraint.isActive = true
-//            cameraCenterXConstraint.isActive = false
-//            cameraCornerXConstraint.isActive = true
-//            self.previewView?.layoutIfNeeded()
             self.updatePlayButtonTitle(isPlaying: true)
             self.vidIsOpen = true
             //self.player?.rate = 1.0
@@ -780,18 +792,10 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             self.playerLayer?.isHidden = true
 
             self.updatePlayButtonTitle(isPlaying: false)
-//            cameraCenterYConstraint.isActive = true
-//            cameraCornerYConstraint.isActive = false
-//            cameraCenterXConstraint.isActive = true
-//            cameraCornerXConstraint.isActive = false
-//            cameraWidthConstraint.constant = 300
-//            cameraHeightConstraint.constant = 350
-//            self.previewView?.layoutIfNeeded()
             //self.player?.rate = 0.0
             videoView.pauseVideo()
             self.vidIsOpen = false
         }
-        
         
     }
     
@@ -810,18 +814,21 @@ extension FaceDetectionController {
         return angleDiff
     }
     
-    
     fileprivate func fixAngle() {
         self.calibrated = true
         
         self.calibratedTiltAngle = calcAverage(numArr: self.anglesTiltForCalibration)
-        self.calibratedfromLeftAngle = calcAverage(numArr: self.fromLeftForCalibration)
-        self.calibratedfromRightAngle = calcAverage(numArr: self.fromRightForCalibration)
+//        self.calibratedfromLeftAngle = calcAverage(numArr: self.fromLeftForCalibration)
+//        self.calibratedfromRightAngle = calcAverage(numArr: self.fromRightForCalibration)
+        self.calibratedWidth = calcAverage(numArr: self.widthsForCalibration)
+        self.calibratedHeight = calcAverage(numArr: self.heightsForCalibration)
+        self.calibratedLeftEyeYPos = calcAverage(numArr: self.leftEyeHeightsForCalibration)
+        self.calibratedLeftEyeXPos = calcAverage(numArr: self.leftEyeXPosForCalbration)
         
         self.sendTiltData(text: String(format: "%.2f", self.calibratedTiltAngle), calibrated: true)
-        self.sendVertData(textLeft: String(format: "%.2f", self.calibratedfromLeftAngle),
-                          textRight: String(format: "%.2f", self.calibratedfromRightAngle),
-                          calibrated: true)
+//        self.sendVertData(textLeft: String(format: "%.2f", self.calibratedfromLeftAngle),
+//                          textRight: String(format: "%.2f", self.calibratedfromRightAngle),
+//                          calibrated: true)
         
     }
     
@@ -837,10 +844,49 @@ extension FaceDetectionController {
         return Float(sum) / Float(count)
     }
     
+    fileprivate func checkYPos(currPos: Float) {
+        if (self.calibrated) {
+            let range = (1 - self.acceptableProp) * self.calibratedHeight
+            if (currPos > self.calibratedLeftEyeYPos + range) {
+                testLab.text = "TILT DOWN"
+            }
+            else if (currPos < self.calibratedLeftEyeYPos - range) {
+                testLab.text = "TILT UP"
+            }
+            else {
+                testLab.text = "GOOD"
+            }
+        }
+    }
+    
+    fileprivate func checkXPos(currPos: Float) {
+        if (self.calibrated) {
+            let range = (1 - self.acceptableProp) * self.calibratedWidth
+            if (currPos > self.calibratedLeftEyeXPos + range) {
+                testLab.text = "TURN RIGHT"
+            }
+            else if (currPos < self.calibratedLeftEyeXPos - range) {
+                testLab.text = "TURN LEFT"
+            }
+            else {
+                testLab.text = "GOOD"
+            }
+        }
+    }
+    
     fileprivate func checkRange(currAngle: Float, currLeftAngle: Float, currRightAngle: Float) {
         if (self.calibrated) {
             self.checkTiltRange(currAngle: currAngle)
             // self.checkVerticalRange(currLeftAngle: currLeftAngle, currRightAngle: currRightAngle)
+            if (!self.outTiltLeft && !self.outTiltRight && !self.outDown && !self.outUp) {
+                warningFeedback.text = "GOOD JOB!"
+                arrowImage.image = UIImage(systemName: "face.smiling")
+                arrowImage.tintColor = .systemYellow
+                self.animateArrows(animationType: 0)
+            }
+            else {
+                warningFeedback.text = "RETURN TO POSITION"
+            }
 
         }
     }
@@ -853,7 +899,7 @@ extension FaceDetectionController {
             return
         }
         if (currAngle > self.calibratedTiltAngle + self.acceptableRange) {
-            warningFeedback.text = "WARNING TILT LEFT"
+            // warningFeedback.text = "WARNING TILT LEFT"
             // outerView.backgroundColor = UIColor.systemRed
             arrowImage.image = UIImage(systemName: "arrow.left")
             arrowImage.tintColor = .black
@@ -868,7 +914,7 @@ extension FaceDetectionController {
 
         }
         else if (currAngle < self.calibratedTiltAngle - self.acceptableRange) {
-            warningFeedback.text = "WARNING TILT RIGHT"
+            // warningFeedback.text = "WARNING TILT RIGHT"
             // outerView.backgroundColor = UIColor.systemRed
             arrowImage.image = UIImage(systemName: "arrow.right")
             arrowImage.tintColor = .black
@@ -882,15 +928,15 @@ extension FaceDetectionController {
             self.outTiltLeft = true
         }
         else {
-            warningFeedback.text = "GOOD JOB"
+            // warningFeedback.text = "GOOD JOB"
             // outerView.backgroundColor = UIColor.white
-            arrowImage.image = UIImage(systemName: "face.smiling")
-            arrowImage.tintColor = .systemYellow
+            // arrowImage.image = UIImage(systemName: "face.smiling")
+            // arrowImage.tintColor = .systemYellow
             if (self.vidIsOpen) {
                 // self.player?.rate = 1.0
                 videoView.playVideo()
             }
-            self.animateArrows(animationType: 0)
+            // self.animateArrows(animationType: 0)
             self.outTiltRight = false
             self.outTiltLeft = false
             
@@ -898,56 +944,56 @@ extension FaceDetectionController {
         
     }
     
-    fileprivate func checkVerticalRange(currLeftAngle: Float, currRightAngle: Float) {
-        if (currRightAngle > self.calibratedfromRightAngle + self.acceptableRange && currLeftAngle > self.calibratedfromLeftAngle + self.acceptableRange)  {
-            if (self.outUp) {
-                return
-            }
-            warningFeedback.text = "WARNING TILT DOWN"
-            // outerView.backgroundColor = UIColor.systemRed
-            UDArrowImage.image = UIImage(systemName: "arrow.down")
-            UDArrowImage.tintColor = .black
-            
-            self.animateArrows(animationType: 3)
-            if (self.vidIsOpen) {
-                videoView.pauseVideo()
-                //self.player?.rate = 0.0
-            }
-            self.outUp = true
-
-        }
-        else if (currRightAngle < self.calibratedfromRightAngle - self.acceptableRange && currLeftAngle < self.calibratedfromLeftAngle - self.acceptableRange)  {
-            if (self.outDown) {
-                return
-            }
-            warningFeedback.text = "WARNING TILT UP"
-            // outerView.backgroundColor = UIColor.systemRed
-            UDArrowImage.image = UIImage(systemName: "arrow.up")
-            UDArrowImage.tintColor = .black
-            
-            self.animateArrows(animationType: 4)
-            if (self.vidIsOpen) {
-                videoView.pauseVideo()
-                //self.player?.rate = 0.0
-            }
-            self.outDown = true
-
-        }
-        else {
-            warningFeedback.text = "GOOD JOB"
-            // outerView.backgroundColor = UIColor.white
-            UDArrowImage.image = UIImage(systemName: "face.smiling")
-            UDArrowImage.tintColor = .systemYellow
-            if (self.vidIsOpen) {
-                // self.player?.rate = 1.0
-                videoView.playVideo()
-            }
-            self.animateArrows(animationType: 5)
-            self.outUp = false
-            self.outDown = false
-            
-        }
-    }
+//    fileprivate func checkVerticalRange(currLeftAngle: Float, currRightAngle: Float) {
+//        if (currRightAngle > self.calibratedfromRightAngle + self.acceptableUpRange && currLeftAngle > self.calibratedfromLeftAngle + self.acceptableUpRange)  {
+//            if (self.outUp) {
+//                return
+//            }
+//            // warningFeedback.text = "WARNING TILT DOWN"
+//            // outerView.backgroundColor = UIColor.systemRed
+//            arrowImage.image = UIImage(systemName: "arrow.down")
+//            arrowImage.tintColor = .black
+//
+//            self.animateArrows(animationType: 3)
+//            if (self.vidIsOpen) {
+//                videoView.pauseVideo()
+//                //self.player?.rate = 0.0
+//            }
+//            self.outUp = true
+//
+//        }
+//        else if (currRightAngle < self.calibratedfromRightAngle - self.acceptableRange && currLeftAngle < self.calibratedfromLeftAngle - self.acceptableRange)  {
+//            if (self.outDown) {
+//                return
+//            }
+//            // warningFeedback.text = "WARNING TILT UP"
+//            // outerView.backgroundColor = UIColor.systemRed
+//            arrowImage.image = UIImage(systemName: "arrow.up")
+//            arrowImage.tintColor = .black
+//
+//            self.animateArrows(animationType: 4)
+//            if (self.vidIsOpen) {
+//                videoView.pauseVideo()
+//                //self.player?.rate = 0.0
+//            }
+//            self.outDown = true
+//
+//        }
+//        else {
+//            // warningFeedback.text = "GOOD JOB"
+//            // outerView.backgroundColor = UIColor.white
+//            // arrowImage.image = UIImage(systemName: "face.smiling")
+//            // arrowImage.tintColor = .systemYellow
+//            if (self.vidIsOpen) {
+//                // self.player?.rate = 1.0
+//                videoView.playVideo()
+//            }
+//            // self.animateArrows(animationType: 5)
+//            self.outUp = false
+//            self.outDown = false
+//
+//        }
+//    }
     
     fileprivate func updatePlayButtonTitle(isPlaying: Bool) {
       if isPlaying {
@@ -1003,7 +1049,7 @@ extension FaceDetectionController {
                 }
                 if (animationType == 5) {
                     UIView.animate(withDuration: 1, delay: 0, animations: {
-                        self.UDArrowImage.transform = .identity
+                        self.arrowImage.transform = .identity
                         return
                     })
                 }
@@ -1019,13 +1065,13 @@ extension FaceDetectionController {
                         self.arrowImage.transform = CGAffineTransform(translationX: 100, y: 0)
                         break
                     case 3: // up
-                        self.UDArrowImage.transform = CGAffineTransform(translationX: 0, y: 50)
+                        self.arrowImage.transform = CGAffineTransform(translationX: 0, y: 50)
                         break
                     case 4: // down
-                        self.UDArrowImage.transform = CGAffineTransform(translationX: 0, y: -50)
+                        self.arrowImage.transform = CGAffineTransform(translationX: 0, y: -50)
                         break
                     case 5:
-                        self.UDArrowImage.transform = .identity
+                        self.arrowImage.transform = .identity
                     default:
                         break
                     }

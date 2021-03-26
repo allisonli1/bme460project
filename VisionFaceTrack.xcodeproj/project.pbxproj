@@ -18,7 +18,6 @@
 		37DF794C2606774A0032C225 /* AngleInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DF794B260677490032C225 /* AngleInfoViewController.swift */; };
 		37DF794F260678420032C225 /* TiltViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DF794E260678420032C225 /* TiltViewController.swift */; };
 		37DF795426079C910032C225 /* VerticalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DF795326079C910032C225 /* VerticalViewController.swift */; };
-		37DF795C2607FB560032C225 /* colorfulStreak.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 37DF794226019B700032C225 /* colorfulStreak.m4v */; };
 		E1F2A12081F0BFCAB8D4EF95 /* Pods_VisionFaceTrack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3E39233405EE793FDAE4E15 /* Pods_VisionFaceTrack.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
@@ -33,7 +32,6 @@
 		28C69F54204F6ACA00949F30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3008CCAF6722CB9E197E4E81 /* Pods-VisionFaceTrack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionFaceTrack.debug.xcconfig"; path = "Target Support Files/Pods-VisionFaceTrack/Pods-VisionFaceTrack.debug.xcconfig"; sourceTree = "<group>"; };
 		3725DF0725F3FB03002D9C0E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		37DF794226019B700032C225 /* colorfulStreak.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; name = colorfulStreak.m4v; path = "../../../../Downloads/CALayer-Materials/starter/LayerPlayer/Supporting Files/colorfulStreak.m4v"; sourceTree = "<group>"; };
 		37DF794726019C180032C225 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = VisionFaceTrack/Views/Base.lproj/FaceDetection.storyboard; sourceTree = "<group>"; };
 		37DF794B260677490032C225 /* AngleInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AngleInfoViewController.swift; sourceTree = "<group>"; };
 		37DF794E260678420032C225 /* TiltViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TiltViewController.swift; sourceTree = "<group>"; };
@@ -123,7 +121,6 @@
 			isa = PBXGroup;
 			children = (
 				28C69F4F204F6ACA00949F30 /* Assets.xcassets */,
-				37DF794226019B700032C225 /* colorfulStreak.m4v */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -215,7 +212,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37DF795C2607FB560032C225 /* colorfulStreak.m4v in Resources */,
 				28C69F53204F6ACA00949F30 /* LaunchScreen.storyboard in Resources */,
 				28C69F50204F6ACA00949F30 /* Assets.xcassets in Resources */,
 				288FF80C206DB231000932BA /* README.md in Resources */,
