@@ -47,8 +47,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     
     lazy var sequenceRequestHandler = VNSequenceRequestHandler()
     
-    var runningAvgArr: [Float] = []
-    var runningAvg: Float = -1
     // Feedback indicators for tilting head
     var calibratedFaceOutline: VNFaceLandmarkRegion2D?
     var calibratedAffineTransform: CGAffineTransform?
@@ -57,16 +55,11 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var calibrated: Bool = false
     var isCalibrating = false
     var acceptableRange: Float = 4.0
-//    var acceptableUpRange: Float = 1.0
     var outTiltLeft = false
     var outTiltRight = false
     var prevOutOfRange = false
     
     // Feedback indicators for up + down movement
-//    var fromLeftForCalibration: [CGFloat] = []
-//    var fromRightForCalibration: [CGFloat] = []
-//    var calibratedfromLeftAngle: Float = 0.0
-//    var calibratedfromRightAngle: Float = 0.0
     var outDown = false
     var outUp = false
     var outRight = false
@@ -77,13 +70,20 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var calibratedHeight: Float = 0.0
     var widthsForCalibration: [CGFloat] = []
     var heightsForCalibration: [CGFloat] = []
-    var acceptableProp: Float = 0.9
+    var acceptableProp: Float = 0.85
     var calibratedLeftEyeYPos: Float = 0.0
     var leftEyeHeightsForCalibration: [CGFloat] = []
     
     // Feedback indicators left and right
     var calibratedLeftEyeXPos: Float = 0.0
     var leftEyeXPosForCalibration: [CGFloat] = []
+    
+    var runningAvgCurrAngle: Float = -1
+    var runningAvgCurrAngleArr: [Float] = []
+    var runningAvgCurrXPos: Float = -1
+    var runningAvgCurrXPosArr: [Float] = []
+    var runningAvgCurrYPos: Float = -1
+    var runningAvgCurrYPosArr: [Float] = []
     
     var prevAnimationType: Int = 0
     
@@ -554,21 +554,25 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             let angleFR = Float(fromRightAngle)
             
 
-            if (runningAvgArr.count >= 5) {
-                runningAvgArr.remove(at: 0)
+            if (runningAvgCurrAngleArr.count >= 10) {
+                runningAvgCurrAngleArr.remove(at: 0)
+                runningAvgCurrXPosArr.remove(at: 0)
+                runningAvgCurrYPosArr.remove(at: 0)
             }
-            runningAvgArr.append(angleTilt)
-            runningAvg = calcAverage(numArr: runningAvgArr)
+            runningAvgCurrAngleArr.append(angleTilt)
+            runningAvgCurrXPosArr.append(Float(leftNorm.x))
+            runningAvgCurrYPosArr.append(Float(leftNorm.y))
+            runningAvgCurrAngle = calcAverage(numArr: runningAvgCurrAngleArr)
+            runningAvgCurrXPos = calcAverage(numArr: runningAvgCurrXPosArr)
+            runningAvgCurrYPos = calcAverage(numArr: runningAvgCurrYPosArr)
             
-            self.sendTiltData(text: String(format: "%.2f", runningAvg), calibrated: false)
+            self.sendTiltData(text: String(format: "%.2f", runningAvgCurrAngle), calibrated: false)
             self.sendVertData(textLeft: String(format: "%.2f", angleFL),
                               textRight: String(format: "%.2f", angleFR),
                               calibrated: false)
             
             if (self.isCalibrating) {
                 self.anglesTiltForCalibration.append(tempAngle)
-//                self.fromLeftForCalibration.append(fromLeftAngle)
-//                self.fromRightForCalibration.append(fromRightAngle)
                 self.widthsForCalibration.append(faceBounds.size.width)
                 self.heightsForCalibration.append(faceBounds.size.height)
                 self.calibratedFaceOutline = landmarks.faceContour
@@ -577,7 +581,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
                 self.leftEyeXPosForCalibration.append(leftNorm.x)
             }
             if (self.calibrated) {
-                self.checkPosition(currAngle: runningAvg, currXPos: Float(leftNorm.x), currYPos: Float(leftNorm.y))
+                self.checkPosition(currAngle: runningAvgCurrAngle, currXPos: runningAvgCurrXPos, currYPos: runningAvgCurrYPos)
                 if let calibratedFace = self.calibratedFaceOutline {
                     if let calibratedAT = self.calibratedAffineTransform {
                         self.addPoints(in: calibratedFace, to: linePath, applying: calibratedAT, closingWhenComplete: false)
@@ -810,17 +814,12 @@ extension FaceDetectionController {
         self.calibrated = true
         
         self.calibratedTiltAngle = calcAverage(numArr: self.anglesTiltForCalibration)
-//        self.calibratedfromLeftAngle = calcAverage(numArr: self.fromLeftForCalibration)
-//        self.calibratedfromRightAngle = calcAverage(numArr: self.fromRightForCalibration)
         self.calibratedWidth = calcAverage(numArr: self.widthsForCalibration)
         self.calibratedHeight = calcAverage(numArr: self.heightsForCalibration)
         self.calibratedLeftEyeYPos = calcAverage(numArr: self.leftEyeHeightsForCalibration)
         self.calibratedLeftEyeXPos = calcAverage(numArr: self.leftEyeXPosForCalibration)
         
         self.sendTiltData(text: String(format: "%.2f", self.calibratedTiltAngle), calibrated: true)
-//        self.sendVertData(textLeft: String(format: "%.2f", self.calibratedfromLeftAngle),
-//                          textRight: String(format: "%.2f", self.calibratedfromRightAngle),
-//                          calibrated: true)
         
     }
     
