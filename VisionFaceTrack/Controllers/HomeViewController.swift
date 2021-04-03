@@ -9,40 +9,49 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-
-    @IBOutlet weak var testImg: UIImageView!
-    @IBOutlet weak var activate: UIButton!
     
-    var currAn = 0
-    
-    
+    var videoList: [String] = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        testImg.image = UIImage(systemName: "octagon.fill")
+
         
         
     }
     
+    @IBAction func unwindToVideoList(sender: UIStoryboardSegue) {
+        if let sourceViewController = sender.source as? EditPlaylistViewController, let plist = sourceViewController.playlist {
+            print("\(plist.title)")
+            
+            self.videoList.append(contentsOf: plist.videos)
+        }
+        
+    }
     
-    @IBAction func animateImg(_ sender: UIButton) {
-        UIView.animate(withDuration: 1, delay: 0, animations: {
-            switch self.currAn {
-            case 0:
-                self.testImg.transform = CGAffineTransform(translationX: 100, y: 0)
-                break
-            case 1:
-                self.testImg.transform = .identity
-                break
-            default:
-                break
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        super.prepare(for: segue, sender: sender)
+        switch(segue.identifier ?? "") {
+        case "StartFaceDetection":
+            guard let destViewController = segue.destination as? UINavigationController else {
+                fatalError("Unexpected destination: \(segue.destination)")
             }
             
-        })
-        self.currAn = 0
+            guard let faceDetectionController = destViewController.topViewController as? FaceDetectionController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            print("\(self.videoList)")
+            faceDetectionController.videoList = self.videoList
+        
+        case "CreatePlaylist":
+            break
+        default:
+            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
+        }
+
+        
     }
-    
     
 
     /*

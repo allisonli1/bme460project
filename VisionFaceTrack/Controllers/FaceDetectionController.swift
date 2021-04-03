@@ -97,6 +97,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
       return playerLayer?.player
     }
 
+    var videoList = [String]()
  
     // MARK: UIViewController overrides
     
@@ -548,6 +549,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             print("Width: \(faceBounds.size.width)")
             print("Height: \(faceBounds.size.height)")
             print("Left Eye: \(leftNorm.y)")
+            print("Videos: \(self.videoList)")
             
             let angleTilt = Float(tempAngle)
             let angleFL = Float(fromLeftAngle)
@@ -747,11 +749,15 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     }
     
     // MARK: Navigation
-    @IBAction func doneCapturing(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
+    // MARK: Actions
+    @IBAction func doneSession(_ sender: Any) {
+        self.teardownAVCapture()
+        // self.videoDataOutputQueue
+        self.dismiss(animated: true, completion: nil)
     }
     
-    // MARK: Actions
+    
+    
     @IBAction func calibrate(_ sender: UIButton) {
         self.anglesTiltForCalibration.removeAll()
 //        self.fromLeftForCalibration.removeAll()
@@ -1035,7 +1041,9 @@ extension FaceDetectionController {
             // previewVideoLayer.addSublayer(playerLayer)
         }
         
-        videoView.load(withVideoId: "cBd7eQ3UXOE", playerVars: ["playsinline":"1"])
+        videoView.load(withVideoId: self.videoList[0], playerVars: ["playsinline":"1"])
+        videoView.cuePlaylist(byVideos: self.videoList, index: 0, startSeconds: 1)
+        
 
 //
 //        // 2
