@@ -18,11 +18,14 @@ class PlaylistSelectionViewController: UIViewController {
         super.viewDidLoad()
 
         loadSamplePlaylists()
-        
+        playlistTable.backgroundColor = UIColor.white
         playlistTable.delegate = self
         playlistTable.dataSource = self
+
         // Do any additional setup after loading the view.
     }
+    
+    
     
 
     // MARK: - Navigation
@@ -53,7 +56,7 @@ class PlaylistSelectionViewController: UIViewController {
             playlistDetailViewController.playlist = selectedPlaylist
         
         default:
-            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
+            break
         }
         
         
@@ -86,12 +89,25 @@ class PlaylistSelectionViewController: UIViewController {
     
     //MARK: Private Methods
     private func loadSamplePlaylists() {
+        
+        let YTVideo1 = YouTubeResult(title:"Auli'i Cravalho - How Far I'll Go", videoID:"cPAbx5kgCJo", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/cPAbx5kgCJo/default.jpg", duration:"")
+        
+        let YTVideo2 = YouTubeResult(title:"Carmen Twillie, Lebo M. - Circle Of Life (Official Video from \"The Lion King\")", videoID:"GibiNy4d4gc", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/GibiNy4d4gc/default.jpg", duration:"")
+        
+        let YTVideo3 = YouTubeResult(title:"The Little Mermaid - Under the Sea (from The Little Mermaid) (Official Video)", videoID:"GC_mV1IpjWA", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/GC_mV1IpjWA/default.jpg", duration:"")
+        
+        let YTVideo4 = YouTubeResult(title:"Idina Menzel - Let It Go (from Frozen) (Official Video)", videoID:"YVVTZgwYwVo", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/YVVTZgwYwVo/default.jpg", duration:"")
 
         let playlist1 = Playlist(title: "Disney Music")
+        playlist1.addVideo(video: YTVideo1)
+        playlist1.addVideo(video: YTVideo2)
+        playlist1.addVideo(video: YTVideo3)
+        playlist1.addVideo(video: YTVideo4)
     
-        playlist1.addVideo(videoID: "cPAbx5kgCJo")
-        playlist1.addVideo(videoID: "V-zXT5bIBM0")
-        playlist1.addVideo(videoID: "GC_mV1IpjWA")
+        playlist1.addVideoID(videoID: YTVideo1.videoID)
+        playlist1.addVideoID(videoID: YTVideo2.videoID)
+        playlist1.addVideoID(videoID: YTVideo3.videoID)
+        playlist1.addVideoID(videoID: YTVideo4.videoID)
         
         playlists.append(playlist1)
         
@@ -101,6 +117,10 @@ class PlaylistSelectionViewController: UIViewController {
 }
 
 extension PlaylistSelectionViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = UIColor.clear
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.playlists.count
@@ -115,10 +135,11 @@ extension PlaylistSelectionViewController: UITableViewDataSource, UITableViewDel
         }
         
         let plist = self.playlists[indexPath.row]
-        tableView.rowHeight = 120
+        tableView.rowHeight = 80
 
         print("Makes the cell")
         cell.nameLabel.text = plist.title
+        cell.numVideosLabel.text = "Videos: \(plist.videos.count)"
         return cell
     }
     

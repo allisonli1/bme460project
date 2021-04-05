@@ -10,22 +10,25 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    //MARK: Properties
+    @IBOutlet weak var startSessionButton: UIButton!
+    @IBOutlet weak var seePlaylistsButton: UIButton!
     var videoList: [String] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-
+        // Set up Butons
+        startSessionButton.layer.cornerRadius = 20
+        startSessionButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        startSessionButton.setTitleColor(UIColor.white, for: .normal)
+        startSessionButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 35)
         
+        seePlaylistsButton.layer.cornerRadius = 20
+        seePlaylistsButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        seePlaylistsButton.setTitleColor(UIColor.white, for: .normal)
+        seePlaylistsButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 35)
         
-    }
-    
-    @IBAction func unwindToVideoList(sender: UIStoryboardSegue) {
-        if let sourceViewController = sender.source as? EditPlaylistViewController, let plist = sourceViewController.playlist {
-            print("\(plist.title)")
-            
-            self.videoList.append(contentsOf: plist.videos)
-        }
         
     }
     
@@ -33,17 +36,8 @@ class HomeViewController: UIViewController {
     {
         super.prepare(for: segue, sender: sender)
         switch(segue.identifier ?? "") {
-        case "StartFaceDetection":
-            guard let destViewController = segue.destination as? UINavigationController else {
-                fatalError("Unexpected destination: \(segue.destination)")
-            }
-            
-            guard let faceDetectionController = destViewController.topViewController as? FaceDetectionController else {
-                fatalError("Unexpected destination: \(segue.destination)")
-            }
-            print("\(self.videoList)")
-            faceDetectionController.videoList = self.videoList
-        
+        case "StartSession":
+            break
         case "CreatePlaylist":
             break
         default:
@@ -53,15 +47,7 @@ class HomeViewController: UIViewController {
         
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func backHome(_ unwindSegue: UIStoryboardSegue) {
+        
     }
-    */
-
 }

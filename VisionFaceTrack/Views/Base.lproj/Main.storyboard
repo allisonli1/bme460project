@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,37 +17,50 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1ny-zF-UC9">
-                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                                <rect key="frame" x="20" y="108" width="374" height="685"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nlC-lK-ryh">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="330"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="34"/>
-                                        <state key="normal" title="Create Video Playlist"/>
+                                        <state key="normal" title="Start Feedback Session"/>
                                         <connections>
-                                            <segue destination="9Qo-pU-RdF" kind="presentation" identifier="CreatePlaylist" modalPresentationStyle="fullScreen" id="nWx-IZ-UAb"/>
+                                            <segue destination="yeP-Uf-6SP" kind="presentation" identifier="StartSession" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="0FS-JP-hMM"/>
                                         </connections>
                                     </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aRH-Yc-gii" userLabel="Spacer">
+                                        <rect key="frame" x="0.0" y="330" width="374" height="25"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="25" id="X3R-GL-a8U"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5pS-wY-FE9">
+                                        <rect key="frame" x="0.0" y="355" width="374" height="330"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                        <state key="normal" title="See Saved Playlists"/>
+                                    </button>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="nlC-lK-ryh" firstAttribute="height" secondItem="5pS-wY-FE9" secondAttribute="height" id="WlG-CP-pKH"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="7a3-Ul-cXG"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="7a3-Ul-cXG" firstAttribute="trailing" secondItem="1ny-zF-UC9" secondAttribute="trailing" id="1LL-rr-Rtp"/>
-                            <constraint firstItem="7a3-Ul-cXG" firstAttribute="bottom" secondItem="1ny-zF-UC9" secondAttribute="bottom" id="WEm-h4-NnC"/>
-                            <constraint firstItem="1ny-zF-UC9" firstAttribute="leading" secondItem="7a3-Ul-cXG" secondAttribute="leading" id="nJh-K3-S7y"/>
-                            <constraint firstItem="1ny-zF-UC9" firstAttribute="top" secondItem="7a3-Ul-cXG" secondAttribute="top" id="odi-ia-jK1"/>
+                            <constraint firstItem="1ny-zF-UC9" firstAttribute="leading" secondItem="7a3-Ul-cXG" secondAttribute="leading" constant="20" id="M32-gZ-NuM"/>
+                            <constraint firstItem="1ny-zF-UC9" firstAttribute="bottom" secondItem="7a3-Ul-cXG" secondAttribute="bottom" constant="-20" id="WEm-h4-NnC"/>
+                            <constraint firstItem="1ny-zF-UC9" firstAttribute="trailing" secondItem="7a3-Ul-cXG" secondAttribute="trailing" constant="-20" id="feB-dw-d0k"/>
+                            <constraint firstItem="1ny-zF-UC9" firstAttribute="top" secondItem="7a3-Ul-cXG" secondAttribute="top" constant="20" id="odi-ia-jK1"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Home" id="Vkb-pS-vCW">
-                        <barButtonItem key="rightBarButtonItem" systemItem="camera" id="fa1-p9-lKC">
-                            <connections>
-                                <segue destination="yeP-Uf-6SP" kind="presentation" identifier="StartFaceDetection" modalPresentationStyle="fullScreen" id="cSd-cj-rYY"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Home" id="Vkb-pS-vCW"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="seePlaylistsButton" destination="5pS-wY-FE9" id="fYR-oK-8zH"/>
+                        <outlet property="startSessionButton" destination="nlC-lK-ryh" id="aWP-nF-Rm3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x9A-UM-rpc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -101,38 +113,5 @@
             </objects>
             <point key="canvasLocation" x="1518.840579710145" y="105.13392857142857"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="4IW-38-Z77">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9Qo-pU-RdF" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="906-Iw-Wmo">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="ByT-ro-ZBN" kind="relationship" relationship="rootViewController" id="44v-44-K23"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KkW-34-CV7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="608.69565217391312" y="850.44642857142856"/>
-        </scene>
-        <!--VideoSelection-->
-        <scene sceneID="wsS-SA-LCZ">
-            <objects>
-                <viewControllerPlaceholder storyboardName="VideoSelection" id="ByT-ro-ZBN" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="1iP-a0-eZO"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="irZ-7I-N98" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1517" y="850"/>
-        </scene>
     </scenes>
-    <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>

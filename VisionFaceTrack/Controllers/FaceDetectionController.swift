@@ -19,8 +19,8 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     @IBOutlet var outerView: UIView!
     @IBOutlet weak var arrowImage: UIImageView!
     @IBOutlet weak var playButton: UIButton!
-    // @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var videoView: YTPlayerView!
+    @IBOutlet weak var initialStackView: UIStackView!
     
     
     // AVCapture variables to hold sequence data
@@ -39,7 +39,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var detectedFaceRectangleShapeLayer: CAShapeLayer?
     var detectedFaceLandmarksShapeLayer: CAShapeLayer?
     var detectedLineLayer: CAShapeLayer?
-    
     
     // Vision requests
     private var detectionRequests: [VNDetectFaceRectanglesRequest]?
@@ -87,23 +86,20 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     
     var prevAnimationType: Int = 0
     
-    // AV Player
-    // var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    // Video Player Variables
     var videoRootLayer: CALayer?
-    var playerLayer: AVPlayerLayer?
     var vidIsOpen = false
-    
-    var player: AVPlayer? {
-      return playerLayer?.player
-    }
-
     var videoList = [String]()
+    var cued = false
  
     // MARK: UIViewController overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Ask to Initialize Playlist First
+        
+        /*
         self.session = self.setupAVCaptureSession()
         
         self.prepareVisionRequest()
@@ -111,8 +107,9 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         self.session?.startRunning()
         
         self.videoView?.layer.isHidden = true
-        
+        */
         // Initializing UI text
+        videoView.delegate = self
         warningFeedback.text = ""
         self.updatePlayButtonTitle(isPlaying: false)
         
@@ -122,11 +119,11 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         super.didReceiveMemoryWarning()
     }
     
+    /*
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "containerViewSegue" {
-            (segue.destination as? AngleInfoViewController)?.layerViewController = self
-        }
+
     }
+ */
     
     // Ensure that the interface stays locked in Portrait.
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -552,9 +549,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             print("Videos: \(self.videoList)")
             
             let angleTilt = Float(tempAngle)
-            let angleFL = Float(fromLeftAngle)
-            let angleFR = Float(fromRightAngle)
-            
 
             if (runningAvgCurrAngleArr.count >= 10) {
                 runningAvgCurrAngleArr.remove(at: 0)
@@ -567,11 +561,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             runningAvgCurrAngle = calcAverage(numArr: runningAvgCurrAngleArr)
             runningAvgCurrXPos = calcAverage(numArr: runningAvgCurrXPosArr)
             runningAvgCurrYPos = calcAverage(numArr: runningAvgCurrYPosArr)
-            
-            self.sendTiltData(text: String(format: "%.2f", runningAvgCurrAngle), calibrated: false)
-            self.sendVertData(textLeft: String(format: "%.2f", angleFL),
-                              textRight: String(format: "%.2f", angleFR),
-                              calibrated: false)
             
             if (self.isCalibrating) {
                 self.anglesTiltForCalibration.append(tempAngle)
@@ -784,17 +773,14 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         if (!self.vidIsOpen) {
             self.rootLayer?.isHidden = true
             self.videoRootLayer?.isHidden = false
-            self.playerLayer?.isHidden = false
             self.updatePlayButtonTitle(isPlaying: true)
             self.vidIsOpen = true
             //self.player?.rate = 1.0
         } else {
             self.rootLayer?.isHidden = false
             self.videoRootLayer?.isHidden = true
-            self.playerLayer?.isHidden = true
 
             self.updatePlayButtonTitle(isPlaying: false)
-            //self.player?.rate = 0.0
             videoView.pauseVideo()
             self.vidIsOpen = false
         }
@@ -824,8 +810,6 @@ extension FaceDetectionController {
         self.calibratedHeight = calcAverage(numArr: self.heightsForCalibration)
         self.calibratedLeftEyeYPos = calcAverage(numArr: self.leftEyeHeightsForCalibration)
         self.calibratedLeftEyeXPos = calcAverage(numArr: self.leftEyeXPosForCalibration)
-        
-        self.sendTiltData(text: String(format: "%.2f", self.calibratedTiltAngle), calibrated: true)
         
     }
     
@@ -1027,40 +1011,12 @@ extension FaceDetectionController {
     }
     
     fileprivate func initializeVideo() {
-        
-        // let playerLayer = AVPlayerLayer()
-        
-        
-        // playerLayer.name = "VideoPreview"
-        // playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        
         if let previewVideoLayer = self.videoView?.layer {
             self.videoRootLayer = previewVideoLayer
             previewVideoLayer.masksToBounds = true
-            // playerLayer.frame = previewVideoLayer.bounds
-            // previewVideoLayer.addSublayer(playerLayer)
         }
         
         videoView.load(withVideoId: self.videoList[0], playerVars: ["playsinline":"1"])
-        videoView.cuePlaylist(byVideos: self.videoList, index: 0, startSeconds: 1)
-        
-
-//
-//        // 2
-//        let url = Bundle.main.url(forResource: "colorfulStreak", withExtension: "m4v")!
-//        let item = AVPlayerItem(asset: AVAsset(url: url))
-//        let player = AVPlayer(playerItem: item)
-//
-//        // 3
-//        player.actionAtItemEnd = .none
-//
-//        // 4
-//        player.volume = 1.0
-//        player.rate = 0.0
-//
-//        playerLayer.player = player
-//        self.playerLayer = playerLayer
-
     }
     
     fileprivate func animateArrows(animationType: Int) {
@@ -1100,27 +1056,37 @@ extension FaceDetectionController {
         }
     }
     
-    fileprivate func sendTiltData(text: String, calibrated: Bool) {
-        let CVC = children.last as! AngleInfoViewController
-        if (calibrated) { // send calibrated value
-            CVC.changeCalibratedLabel(textLeft: text, textRight: "", type: 0)
+    //MARK: Unwind Segues
+    @IBAction func sendVideoList(sender: UIStoryboardSegue) {
+        if let sourceViewController = sender.source as? EditPlaylistViewController, let plist = sourceViewController.playlist {
+            print("\(plist.title)")
+            
+            self.videoList.append(contentsOf: plist.videoIDs)
         }
-        else {
-            CVC.changeLiveLabel(textLeft: text, textRight: "", type: 0)
-        }
+        initialStackView.removeFromSuperview()
+        
+        self.session = self.setupAVCaptureSession()
+        self.prepareVisionRequest()
+        self.session?.startRunning()
+        self.videoView?.layer.isHidden = true
+        self.initializeVideo()
+        // self.videoView.cuePlaylist(byVideos: self.videoList, index: 1, startSeconds: 1)
     }
     
-    fileprivate func sendVertData(textLeft: String, textRight: String, calibrated: Bool) {
-        let CVC = children.last as! AngleInfoViewController
-        if (calibrated) {
-            CVC.changeCalibratedLabel(textLeft: textLeft, textRight: textRight, type: 1)
-        }
-        else {
-            CVC.changeLiveLabel(textLeft: textLeft, textRight: textRight, type: 1)
-        }
-
-
+    @IBAction func cancelFromPopup(_ unwindSegue: UIStoryboardSegue) {
+        
     }
     
+}
+
+extension FaceDetectionController: YTPlayerViewDelegate {
+    func playerViewDidBecomeReady(_ playerView: YTPlayerView)
+    {
+        if (!self.cued) {
+            playerView.cuePlaylist(byVideos: videoList, index: 1, startSeconds: 0)
+            self.cued = true
+        }
+        
+    }
 }
 

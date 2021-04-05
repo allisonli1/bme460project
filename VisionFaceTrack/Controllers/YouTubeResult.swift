@@ -14,13 +14,15 @@ class YouTubeResult {
     var channel: String
     var description: String
     var imageURL: String
+    var duration: String
     
-    init(title: String, videoID: String, channel: String, description: String, imageURL: String) {
+    init(title: String, videoID: String, channel: String, description: String, imageURL: String, duration: String) {
         self.title = title
         self.videoID = videoID
         self.channel = channel
         self.description = description
         self.imageURL = imageURL
+        self.duration = duration
     }
     
     func setTitle(title: String) {
@@ -41,5 +43,9 @@ class YouTubeResult {
     
     func setImageURL(imageURL: String) {
         self.imageURL = imageURL // 90x120 images
+    }
+    
+    func setDuration(duration: String) {
+        self.duration = duration
     }
 }

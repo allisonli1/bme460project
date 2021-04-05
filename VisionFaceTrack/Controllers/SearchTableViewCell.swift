@@ -13,7 +13,8 @@ class SearchTableViewCell: UITableViewCell {
     //MARK: Properties
     @IBOutlet weak var thumbnailImage: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descLabel: UILabel!
+    @IBOutlet weak var channelLabel: UILabel!
+    
     
 
     override func awakeFromNib() {
@@ -30,7 +31,7 @@ class SearchTableViewCell: UITableViewCell {
     func setVideo(video: YouTubeResult) {
         loadURL(url: NSURL(string: video.imageURL)! as URL)
         self.titleLabel.text = video.title
-        self.descLabel.text = video.description
+        self.channelLabel.text = video.channel
     }
     
     func loadURL(url: URL) {

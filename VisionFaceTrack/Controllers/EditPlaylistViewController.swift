@@ -8,65 +8,48 @@
 
 import UIKit
 
-class EditPlaylistViewController: UIViewController, UITextFieldDelegate {
+class EditPlaylistViewController: UIViewController {
     
     @IBOutlet weak var videoTable: UITableView!
-    @IBOutlet weak var playlistName: UITextField!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
     
     var playlist: Playlist?
-    var videos: [String] = []
+    var videos: [YouTubeResult] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        playlistName.delegate = self
         videoTable.delegate = self
         videoTable.dataSource = self
+        videoTable.backgroundColor = UIColor.white
         if let playlist = playlist {
-            playlistName.text = playlist.title
             videos.append(contentsOf: playlist.videos)
         }
-        
-
-        // Do any additional setup after loading the view.
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         super.prepare(for: segue, sender: sender)
         
-        // Configure the destination view controller only when the save button is pressed.
-//        guard let button = sender as? UIBarButtonItem, button === saveButton else {
-//            return
-//        }
-        
-        let title = playlistName.text ?? "No Name"
         let selectedVideos = videos
         
-        // Set the meal to be passed to MealTableViewController after the unwind segue.
-        playlist = Playlist(title: title)
+        // Set the playlist to be passed after the unwind segue.
+        playlist = Playlist(title: "")
         for vid in selectedVideos {
-            playlist?.addVideo(videoID: vid)
+            playlist?.addVideoID(videoID: vid.videoID)
+            playlist?.addVideo(video: vid)
         }
         
     }
     
-    //MARK: UITextFieldDelegate
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // Hide the keyboard.
-        textField.resignFirstResponder()
-        return true
-    }
-    
-
     //MARK: Actions
     @IBAction func getPlaylistResults(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? SearchViewController {
             let selectedVideos = sourceViewController.selectedVideos
             
             for vid in selectedVideos {
-                self.playlist?.addVideo(videoID: vid)
+                self.playlist?.addVideoID(videoID: vid.videoID)
+                self.playlist?.addVideo(video: vid)
             }
             self.videos.append(contentsOf: selectedVideos)
             self.videoTable.reloadData()
@@ -106,17 +89,16 @@ extension EditPlaylistViewController: UITableViewDataSource, UITableViewDelegate
             fatalError("The dequeued cell is not an instance of VideoTableViewCell.")
         }
         
-        let videoID = self.videos[indexPath.row]
-        tableView.rowHeight = 120
+        let video = self.videos[indexPath.row]
+        tableView.rowHeight = 90
 
         print("Makes the cell")
-        cell.videoID.text = videoID
+        cell.setVideo(video: video)
         return cell
     }
     
     // Override to support conditional editing of the table view.
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
     

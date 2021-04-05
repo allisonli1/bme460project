@@ -16,7 +16,8 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var searchButton: UIButton!
     @IBOutlet weak var searchTerm: UITextField!
     @IBOutlet weak var saveButton: UIBarButtonItem!
-    var selectedVideos: [String] = []
+    var selectedVideos: [YouTubeResult] = []
+    var selected: [Bool]!
     var playlistName: String = ""
     let API_KEY = "AIzaSyCfm9iBIi02F_6G8QhHZesCVbjmwvwwkxQ"
     
@@ -28,6 +29,7 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
         searchTableView.dataSource = self
         searchTableView.allowsMultipleSelection = true
         searchTerm.delegate = self
+        searchTableView.backgroundColor = UIColor.white
         
     }
     
@@ -101,37 +103,42 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? SearchTableViewCell  else {
             fatalError("The dequeued cell is not an instance of SearchTableViewCell.")
         }
+        tableView.rowHeight = 90
         
         let video = self.videos[indexPath.row]
-        tableView.rowHeight = 120
-
         print("Makes the cell")
         cell.setVideo(video: video)
+        
+        var hasVideo = false
+        let newVideoID = video.videoID
+        for vid in selectedVideos {
+            if (vid.videoID == newVideoID) {
+                hasVideo = true
+            }
+        }
+        
+        if selected[indexPath.row] {
+            if (!hasVideo) {
+                self.selectedVideos.append(video)
+                cell.accessoryType = .checkmark
+            }
+        } else {
+            if (hasVideo) {
+                for (idx, vid) in self.selectedVideos.enumerated() {
+                    if (vid.videoID == newVideoID) {
+                        self.selectedVideos.remove(at: idx)
+                    }
+                }
+            }
+            cell.accessoryType = .none
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Unselect the row, and instead, show the state with a checkmark.
-        tableView.deselectRow(at: indexPath, animated: false)
-        
-        guard let cell = tableView.cellForRow(at: indexPath) else { return }
-        
-        // Update the selected item to indicate whether the user packed it or not.
-        let video = videos[indexPath.row]
-        let newVideoID = video.videoID
-        if (!self.selectedVideos.contains(newVideoID)) {
-            self.selectedVideos.append(newVideoID)
-            cell.accessoryType = .checkmark
-        }
-        else {
-            for (idx, id) in self.selectedVideos.enumerated() {
-                if (id == newVideoID) {
-                    self.selectedVideos.remove(at: idx)
-                }
-                cell.accessoryType = .none
-            }
-        }
-
+        tableView.deselectRow(at: indexPath, animated: true)
+        selected[indexPath.row] = !selected[indexPath.row]
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
 }
@@ -153,9 +160,11 @@ extension SearchViewController {
                             for (_, key_value) in value.enumerated() {
                                 if let arr = key_value.value as? [[String: Any]] {
                                     for i in arr {
-                                        let video = YouTubeResult(title:"", videoID:"", channel:"", description:"", imageURL:"")
+                                        let video = YouTubeResult(title:"", videoID:"", channel:"", description:"", imageURL:"", duration:"")
                                         if let snip = i["snippet"] as? [String: Any] {
-                                            video.setTitle(title: snip["title"] as! String)
+                                            let tempTitle = snip["title"] as! String
+                                            let realTitle = tempTitle.replacingOccurrences(of: "&#39;", with: "'").replacingOccurrences(of: "&quot;", with: "\"")
+                                            video.setTitle(title: realTitle)
                                             video.setChannel(channel: snip["channelTitle"] as! String)
                                             video.setDescription(description: snip["description"] as! String)
                                             if let thumbnails = snip["thumbnails"] as? [String: Any] {
@@ -163,6 +172,9 @@ extension SearchViewController {
                                                     video.setImageURL(imageURL: imURL["url"] as! String)
                                                 }
                                             }
+                                        }
+                                        if let contentDetails = i["contentDetails"] as? [String: Any] {
+                                            video.setDuration(duration: contentDetails["duration"] as! String)
                                         }
                                         if let id = i["id"] as? [String: Any] {
                                             if id["kind"] as! String == "youtube#video" {
@@ -179,19 +191,12 @@ extension SearchViewController {
                                 print("Number: \(j)")
                                 print("Video Title: \(x.title)")
                                 print("Channel: \(x.channel)")
-                                if x.description.count > 25 {
-                                    let lowerBound = String.Index(encodedOffset: 0)
-                                    let upperBound = String.Index(encodedOffset: 24)
-                                    print("Description: \(x.description[lowerBound..<upperBound])...")
-                                }
-                                else {
-                                    print("Description: \(x.description)")
-                                }
                                 print("Thumbnail URL: \(x.imageURL)")
                                 print("videoID: \(x.videoID)\n")
+                                print("duration: \(x.duration)\n")
                                 j += 1
                             }
-                            
+                            self.selected = [Bool](repeating: false, count: self.videos.count)
                         }
 
         }

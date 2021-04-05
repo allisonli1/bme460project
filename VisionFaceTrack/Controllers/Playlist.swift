@@ -10,19 +10,25 @@ import Foundation
 
 class Playlist {
     var title: String
-    var videos: [String]
+    var videos: [YouTubeResult]
+    var videoIDs: [String]
     
     
     init(title: String) {
         self.title = title
         self.videos = []
+        self.videoIDs = []
     }
     
     func setTitle(title: String) {
         self.title = title
     }
     
-    func addVideo(videoID: String) {
-        self.videos.append(videoID)
+    func addVideo(video: YouTubeResult) {
+        self.videos.append(video)
+    }
+    
+    func addVideoID(videoID: String) {
+        self.videoIDs.append(videoID)
     }
 }

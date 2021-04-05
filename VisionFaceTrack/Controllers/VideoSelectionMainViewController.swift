@@ -85,7 +85,7 @@ class VideoSelectionMainViewController: UIViewController, UITextFieldDelegate {
         if let sourceViewController = sender.source as? SearchViewController {
             let selectedVideos = sourceViewController.selectedVideos
             
-            self.videoQueue.append(contentsOf: selectedVideos)
+            // self.videoQueue.append(contentsOf: selectedVideos)
             print("\(videoQueue)")
             youtubeView.cuePlaylist(byVideos: self.videoQueue, index: 0, startSeconds: 1)
             //playerView.loadPlaylist(byVideos: [self.videoQueue[1]], index: 1, startSeconds: 1)
@@ -112,7 +112,7 @@ class VideoSelectionMainViewController: UIViewController, UITextFieldDelegate {
                             for (_, key_value) in value.enumerated() {
                                 if let arr = key_value.value as? [[String: Any]] {
                                     for i in arr {
-                                        let video = YouTubeResult(title:"", videoID:"", channel:"", description:"", imageURL:"")
+                                        let video = YouTubeResult(title:"", videoID:"", channel:"", description:"", imageURL:"", duration:"")
                                         if let snip = i["snippet"] as? [String: Any] {
                                             video.setTitle(title: snip["title"] as! String)
                                             video.setChannel(channel: snip["channelTitle"] as! String)
