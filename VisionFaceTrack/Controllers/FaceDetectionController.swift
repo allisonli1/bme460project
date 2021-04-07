@@ -10,6 +10,8 @@ import AVKit
 import Vision
 import youtube_ios_player_helper
 import Alamofire
+import MediaPlayer
+
 
 class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
 
@@ -21,6 +23,9 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var videoView: YTPlayerView!
     @IBOutlet weak var initialStackView: UIStackView!
+    @IBOutlet weak var senseSlider: UISlider!
+    @IBOutlet weak var senseLabel: UILabel!
+    @IBOutlet weak var calibrateButton: UIButton!
     
     
     // AVCapture variables to hold sequence data
@@ -69,7 +74,10 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var calibratedHeight: Float = 0.0
     var widthsForCalibration: [CGFloat] = []
     var heightsForCalibration: [CGFloat] = []
-    var acceptableProp: Float = 0.85
+    var originalProp: Float = 0.90
+    var originalPropUp: Float = 0.98
+    var acceptableProp: Float = 0.90
+    var acceptablePropUp: Float = 0.95
     var calibratedLeftEyeYPos: Float = 0.0
     var leftEyeHeightsForCalibration: [CGFloat] = []
     
@@ -112,18 +120,16 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         videoView.delegate = self
         warningFeedback.text = ""
         self.updatePlayButtonTitle(isPlaying: false)
+        senseLabel.text = "Sensitivity: 100%"
+        senseSlider.value = 1.0
+        playButton.isEnabled = false
+        calibrateButton.isEnabled = false
         
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    /*
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
-    }
- */
     
     // Ensure that the interface stays locked in Portrait.
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -740,11 +746,24 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     // MARK: Navigation
     // MARK: Actions
     @IBAction func doneSession(_ sender: Any) {
-        self.teardownAVCapture()
-        // self.videoDataOutputQueue
+        navigationController?.popViewController(animated: true)
+        self.session?.stopRunning()
         self.dismiss(animated: true, completion: nil)
     }
     
+    
+    
+    @IBAction func startWithoutPlaylist(_ sender: UIButton) {
+        
+        initialStackView.removeFromSuperview()
+        
+        self.session = self.setupAVCaptureSession()
+        self.prepareVisionRequest()
+        self.session?.startRunning()
+        self.videoView?.layer.isHidden = true
+        calibrateButton.isEnabled = true
+        
+    }
     
     
     @IBAction func calibrate(_ sender: UIButton) {
@@ -767,7 +786,9 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     
     @IBAction func playVideo(_ sender: UIButton) {
         if self.videoRootLayer == nil {
-            initializeVideo()
+            if (self.videoList.count > 0) {
+                initializeVideo()
+            }
         }
         
         if (!self.vidIsOpen) {
@@ -787,6 +808,11 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         
     }
     
+    @IBAction func changeSensitivity(_ sender: UISlider) {
+        self.acceptableProp = senseSlider.value * self.originalProp
+        self.acceptablePropUp = senseSlider.value * self.originalPropUp
+        senseLabel.text = String(format: "Sensitivity: %0.0f%%", senseSlider.value * 100)
+    }
 }
 
 
@@ -867,6 +893,7 @@ extension FaceDetectionController {
             if (self.vidIsOpen) {
                 // self.player?.rate = 0.0
                 videoView.pauseVideo()
+                //videoView.setVolume()
             }
         }
         else if (outVertical) {
@@ -891,7 +918,6 @@ extension FaceDetectionController {
                 prevAnimationType = 4
             }
             if (self.vidIsOpen) {
-                // self.player?.rate = 0.0
                 videoView.pauseVideo()
             }
         }
@@ -939,7 +965,8 @@ extension FaceDetectionController {
     fileprivate func checkYPosInRange(currPos: Float) -> Bool {
         if (self.calibrated) {
             let range = (1 - self.acceptableProp) * self.calibratedHeight
-            if (currPos > self.calibratedLeftEyeYPos + range) {
+            let rangeUp = (1 - self.acceptablePropUp) * self.calibratedHeight
+            if (currPos > self.calibratedLeftEyeYPos + rangeUp) {
                 self.outUp = true
             }
             else if (currPos < self.calibratedLeftEyeYPos - range) {
@@ -1017,6 +1044,7 @@ extension FaceDetectionController {
         }
         
         videoView.load(withVideoId: self.videoList[0], playerVars: ["playsinline":"1"])
+        
     }
     
     fileprivate func animateArrows(animationType: Int) {
@@ -1070,7 +1098,8 @@ extension FaceDetectionController {
         self.session?.startRunning()
         self.videoView?.layer.isHidden = true
         self.initializeVideo()
-        // self.videoView.cuePlaylist(byVideos: self.videoList, index: 1, startSeconds: 1)
+        calibrateButton.isEnabled = true
+        playButton.isEnabled = true
     }
     
     @IBAction func cancelFromPopup(_ unwindSegue: UIStoryboardSegue) {
@@ -1083,7 +1112,7 @@ extension FaceDetectionController: YTPlayerViewDelegate {
     func playerViewDidBecomeReady(_ playerView: YTPlayerView)
     {
         if (!self.cued) {
-            playerView.cuePlaylist(byVideos: videoList, index: 1, startSeconds: 0)
+            playerView.cuePlaylist(byVideos: self.videoList, index: 0, startSeconds: 0)
             self.cued = true
         }
         

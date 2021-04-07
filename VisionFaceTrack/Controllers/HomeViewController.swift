@@ -40,6 +40,8 @@ class HomeViewController: UIViewController {
             break
         case "CreatePlaylist":
             break
+        case "AddNewPlaylist":
+            break
         default:
             fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
         }

@@ -8,19 +8,31 @@
 
 import Foundation
 
-class YouTubeResult {
+class YouTubeResult: NSObject, NSCoding {
     var title: String
     var videoID: String
     var channel: String
-    var description: String
+    var description1: String
     var imageURL: String
     var duration: String
+    
+    struct PropertyKey {
+        static let title = "title"
+        static let videoID = "videoID"
+        static let channel = "channel"
+        static let imageURL = "imageURL"
+    }
+    
+    //MARK: Archiving Paths
+     
+    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+    static let ArchiveURL = DocumentsDirectory.appendingPathComponent("youtuberesults")
     
     init(title: String, videoID: String, channel: String, description: String, imageURL: String, duration: String) {
         self.title = title
         self.videoID = videoID
         self.channel = channel
-        self.description = description
+        self.description1 = description
         self.imageURL = imageURL
         self.duration = duration
     }
@@ -38,7 +50,7 @@ class YouTubeResult {
     }
     
     func setDescription(description: String) {
-        self.description = description
+        self.description1 = description
     }
     
     func setImageURL(imageURL: String) {
@@ -47,5 +59,36 @@ class YouTubeResult {
     
     func setDuration(duration: String) {
         self.duration = duration
+    }
+    
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(title, forKey: PropertyKey.title)
+        aCoder.encode(videoID, forKey: PropertyKey.videoID)
+        aCoder.encode(channel, forKey: PropertyKey.channel)
+        aCoder.encode(imageURL, forKey: PropertyKey.imageURL)
+    }
+    
+    required convenience init?(coder aDecoder: NSCoder) {
+        
+        // The name is required. If we cannot decode a name string, the initializer should fail.
+        guard let title = aDecoder.decodeObject(forKey: PropertyKey.title) as? String else {
+            return nil
+        }
+        
+        guard let videoID = aDecoder.decodeObject(forKey: PropertyKey.videoID) as? String else {
+            return nil
+        }
+        
+        guard let channel = aDecoder.decodeObject(forKey: PropertyKey.channel) as? String else {
+            return nil
+        }
+        
+        guard let imageURL = aDecoder.decodeObject(forKey: PropertyKey.imageURL) as? String else {
+            return nil
+        }
+        
+
+        self.init(title: title, videoID: videoID, channel: channel, description: "", imageURL: imageURL, duration: "")
     }
 }

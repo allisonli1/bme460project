@@ -120,8 +120,9 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         if selected[indexPath.row] {
             if (!hasVideo) {
                 self.selectedVideos.append(video)
-                cell.accessoryType = .checkmark
+                
             }
+            cell.accessoryType = .checkmark
         } else {
             if (hasVideo) {
                 for (idx, vid) in self.selectedVideos.enumerated() {
@@ -160,6 +161,7 @@ extension SearchViewController {
                             for (_, key_value) in value.enumerated() {
                                 if let arr = key_value.value as? [[String: Any]] {
                                     for i in arr {
+                                        print("i: \(i)")
                                         let video = YouTubeResult(title:"", videoID:"", channel:"", description:"", imageURL:"", duration:"")
                                         if let snip = i["snippet"] as? [String: Any] {
                                             let tempTitle = snip["title"] as! String

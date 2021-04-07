@@ -38,6 +38,9 @@
                                         <rect key="frame" x="0.0" y="355" width="374" height="330"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="34"/>
                                         <state key="normal" title="See Saved Playlists"/>
+                                        <connections>
+                                            <segue destination="jVk-uy-FWS" kind="presentation" identifier="AddNewPlaylist" modalPresentationStyle="fullScreen" id="JIM-Hn-Q9T"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -112,6 +115,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AUw-Y4-Ubx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1518.840579710145" y="105.13392857142857"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="PJq-QZ-VQj">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jVk-uy-FWS" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gpR-3Q-VgI">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="w3q-e2-iLL" kind="relationship" relationship="rootViewController" id="Ecz-Lb-uhb"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zyk-kt-3Xm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="609" y="836"/>
+        </scene>
+        <!--PlaylistCreation-->
+        <scene sceneID="hnv-iN-oKb">
+            <objects>
+                <viewControllerPlaceholder storyboardName="PlaylistCreation" id="w3q-e2-iLL" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="1mV-Mv-EYg"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="i7k-yT-NY1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1867" y="836"/>
         </scene>
     </scenes>
 </document>

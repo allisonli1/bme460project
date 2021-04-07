@@ -21,7 +21,10 @@ class PlaylistSelectionViewController: UIViewController {
         playlistTable.backgroundColor = UIColor.white
         playlistTable.delegate = self
         playlistTable.dataSource = self
-
+        
+        if let savedPlaylists = loadPlaylists() {
+            playlists += savedPlaylists
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -40,7 +43,22 @@ class PlaylistSelectionViewController: UIViewController {
         case "AddPlaylist":
             break
         case "ShowPlaylist":
-            guard let playlistDetailViewController = segue.destination as? EditPlaylistViewController else {
+            guard let playlistDetailViewController = segue.destination as? (EditPlaylistViewController) else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+             
+            guard let selectedPlaylistCell = sender as? PlaylistTableViewCell else {
+                fatalError("Unexpected sender: \(String(describing: sender))")
+            }
+             
+            guard let indexPath = playlistTable.indexPath(for: selectedPlaylistCell) else {
+                fatalError("The selected cell is not being displayed by the table")
+            }
+             
+            let selectedPlaylist = playlists[indexPath.row]
+            playlistDetailViewController.playlist = selectedPlaylist
+        case "ShowSavedPlaylist":
+            guard let playlistDetailViewController = segue.destination as? (SavePlaylistViewController) else {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
              
@@ -65,7 +83,7 @@ class PlaylistSelectionViewController: UIViewController {
     
     //MARK: Actions
     @IBAction func unwindToPlaylistList(sender: UIStoryboardSegue) {
-        if let sourceViewController = sender.source as? EditPlaylistViewController, let plist = sourceViewController.playlist {
+        if let sourceViewController = sender.source as? SavePlaylistViewController, let plist = sourceViewController.playlist {
             print("\(plist.title)")
 
             if let selectedIndexPath = playlistTable.indexPathForSelectedRow {
@@ -79,8 +97,10 @@ class PlaylistSelectionViewController: UIViewController {
                 let newIndexPath = IndexPath(row: playlists.count, section: 0)
 
                 playlists.append(plist)
-                playlistTable.insertRows(at: [newIndexPath], with: .automatic)
+                playlistTable.insertRows(at: [newIndexPath], with: .none)
             }
+            
+            savePlaylists()
 
         }
         
@@ -113,6 +133,16 @@ class PlaylistSelectionViewController: UIViewController {
         
     }
     
+    private func savePlaylists() {
+        print("HERE")
+        _ = NSKeyedArchiver.archiveRootObject(playlists, toFile: Playlist.ArchiveURL.path)
+        
+    }
+    
+    private func loadPlaylists() -> [Playlist]?  {
+        return NSKeyedUnarchiver.unarchiveObject(withFile: Playlist.ArchiveURL.path) as? [Playlist]
+    }
+    
 
 }
 
@@ -120,6 +150,10 @@ extension PlaylistSelectionViewController: UITableViewDataSource, UITableViewDel
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.backgroundColor = UIColor.clear
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -154,6 +188,7 @@ extension PlaylistSelectionViewController: UITableViewDataSource, UITableViewDel
         if editingStyle == .delete {
             // Delete the row from the data source
             playlists.remove(at: indexPath.row)
+            savePlaylists()
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view

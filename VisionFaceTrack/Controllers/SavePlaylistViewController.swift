@@ -1,31 +1,35 @@
 //
-//  EditPlaylistViewController.swift
+//  SavePlaylistViewController.swift
 //  VisionFaceTrack
 //
-//  Created by Allison Li on 4/2/21.
+//  Created by Allison Li on 4/6/21.
 //  Copyright © 2021 Apple. All rights reserved.
 //
 
 import UIKit
 
-class EditPlaylistViewController: UIViewController {
-    
-    @IBOutlet weak var videoTable: UITableView!
-    
+class SavePlaylistViewController: UIViewController, UITextFieldDelegate {
+
+    @IBOutlet weak var saveVideoTable: UITableView!
+    @IBOutlet weak var nameTextField: UITextField!
     
     var playlist: Playlist?
     var videos: [YouTubeResult] = []
-
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        videoTable.delegate = self
-        videoTable.dataSource = self
-        videoTable.dragDelegate = self
-        videoTable.dragInteractionEnabled = true
-        videoTable.backgroundColor = UIColor.white
+        nameTextField.delegate = self
+        saveVideoTable.delegate = self
+        saveVideoTable.dataSource = self
+        saveVideoTable.dragDelegate = self
+        saveVideoTable.dragInteractionEnabled = true
+        saveVideoTable.backgroundColor = UIColor.white
         if let playlist = playlist {
             videos.append(contentsOf: playlist.videos)
+            nameTextField.text = playlist.title
         }
+        saveButton.isEnabled = false
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -36,11 +40,23 @@ class EditPlaylistViewController: UIViewController {
         
         // Set the playlist to be passed after the unwind segue.
         playlist = Playlist(title: "")
+        if let newTitle = nameTextField.text {
+            playlist?.setTitle(title: newTitle)
+        }
         for vid in selectedVideos {
             playlist?.addVideoID(videoID: vid.videoID)
             playlist?.addVideo(video: vid)
         }
         
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Hide the keyboard.
+        textField.resignFirstResponder()
+        if (textField.hasText) {
+            saveButton.isEnabled = true
+        }
+        return true
     }
     
     //MARK: Actions
@@ -53,14 +69,13 @@ class EditPlaylistViewController: UIViewController {
                 self.playlist?.addVideo(video: vid)
             }
             self.videos.append(contentsOf: selectedVideos)
-            self.videoTable.reloadData()
+            self.saveVideoTable.reloadData()
             
         }
     }
     
-    
     @IBAction func cancel(_ sender: UIBarButtonItem) {
-        // Depending on style of presentation (modal or push presentation), this view controller needs to be dismissed in two different ways.
+        
         let isPresentingInAddPlaylistMode = presentingViewController is UINavigationController
         
         if (isPresentingInAddPlaylistMode) {
@@ -70,13 +85,15 @@ class EditPlaylistViewController: UIViewController {
             owningNavigationController.popViewController(animated: true)
         }
         else {
-            fatalError("The EditPlaylistViewController is not inside a navigation controller.")
+            fatalError("The SavePlaylistViewController is not inside a navigation controller.")
         }
+        
     }
     
+
 }
 
-extension EditPlaylistViewController: UITableViewDataSource, UITableViewDelegate, UITableViewDragDelegate {
+extension SavePlaylistViewController: UITableViewDataSource, UITableViewDelegate, UITableViewDragDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.videos.count
@@ -129,3 +146,4 @@ extension EditPlaylistViewController: UITableViewDataSource, UITableViewDelegate
 
     
 }
+

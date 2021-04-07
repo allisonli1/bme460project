@@ -14,6 +14,8 @@
 		28C69F50204F6ACA00949F30 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28C69F4F204F6ACA00949F30 /* Assets.xcassets */; };
 		28C69F53204F6ACA00949F30 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28C69F51204F6ACA00949F30 /* LaunchScreen.storyboard */; };
 		3725DF0825F3FB03002D9C0E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3725DF0725F3FB03002D9C0E /* HomeViewController.swift */; };
+		376F9C9C261D605100CA325B /* PlaylistCreation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 376F9C9A261D604F00CA325B /* PlaylistCreation.storyboard */; };
+		376F9C9F261D614100CA325B /* SavePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376F9C9E261D614100CA325B /* SavePlaylistViewController.swift */; };
 		37949CC02616CD170073FCED /* VideoSelection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37949CBE2616CD170073FCED /* VideoSelection.storyboard */; };
 		37949CC42616CF470073FCED /* VideoSelectionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CC32616CF470073FCED /* VideoSelectionMainViewController.swift */; };
 		37949CC726178EE80073FCED /* YouTubeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CC626178EE80073FCED /* YouTubeResult.swift */; };
@@ -39,6 +41,8 @@
 		28C69F54204F6ACA00949F30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3008CCAF6722CB9E197E4E81 /* Pods-VisionFaceTrack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionFaceTrack.debug.xcconfig"; path = "Target Support Files/Pods-VisionFaceTrack/Pods-VisionFaceTrack.debug.xcconfig"; sourceTree = "<group>"; };
 		3725DF0725F3FB03002D9C0E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		376F9C9B261D604F00CA325B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PlaylistCreation.storyboard; sourceTree = "<group>"; };
+		376F9C9E261D614100CA325B /* SavePlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavePlaylistViewController.swift; sourceTree = "<group>"; };
 		37949CBF2616CD170073FCED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/VideoSelection.storyboard; sourceTree = "<group>"; };
 		37949CC32616CF470073FCED /* VideoSelectionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSelectionMainViewController.swift; sourceTree = "<group>"; };
 		37949CC626178EE80073FCED /* YouTubeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeResult.swift; sourceTree = "<group>"; };
@@ -123,6 +127,7 @@
 				37949CD92617DD340073FCED /* PlaylistTableViewCell.swift */,
 				37949CDF2617E0980073FCED /* EditPlaylistViewController.swift */,
 				37949CE32617E7220073FCED /* VideoTableViewCell.swift */,
+				376F9C9E261D614100CA325B /* SavePlaylistViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -130,6 +135,7 @@
 		37DF794026019B3E0032C225 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				376F9C9A261D604F00CA325B /* PlaylistCreation.storyboard */,
 				37949CBE2616CD170073FCED /* VideoSelection.storyboard */,
 				37DF794626019C180032C225 /* FaceDetection.storyboard */,
 				28C69F4C204F6ACA00949F30 /* Main.storyboard */,
@@ -238,6 +244,7 @@
 				28C69F50204F6ACA00949F30 /* Assets.xcassets in Resources */,
 				288FF80C206DB231000932BA /* README.md in Resources */,
 				37DF794826019C180032C225 /* FaceDetection.storyboard in Resources */,
+				376F9C9C261D605100CA325B /* PlaylistCreation.storyboard in Resources */,
 				28C69F4E204F6ACA00949F30 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,6 +303,7 @@
 			files = (
 				37949CD026179A6F0073FCED /* SearchViewController.swift in Sources */,
 				37949CDA2617DD340073FCED /* PlaylistTableViewCell.swift in Sources */,
+				376F9C9F261D614100CA325B /* SavePlaylistViewController.swift in Sources */,
 				37949CDD2617E0620073FCED /* Playlist.swift in Sources */,
 				28C69F4B204F6ACA00949F30 /* FaceDetectionController.swift in Sources */,
 				37949CC726178EE80073FCED /* YouTubeResult.swift in Sources */,
@@ -326,6 +334,14 @@
 				28C69F52204F6ACA00949F30 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		376F9C9A261D604F00CA325B /* PlaylistCreation.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				376F9C9B261D604F00CA325B /* Base */,
+			);
+			name = PlaylistCreation.storyboard;
 			sourceTree = "<group>";
 		};
 		37949CBE2616CD170073FCED /* VideoSelection.storyboard */ = {
