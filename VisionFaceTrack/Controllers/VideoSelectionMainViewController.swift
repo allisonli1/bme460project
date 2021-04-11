@@ -154,6 +154,7 @@ class VideoSelectionMainViewController: UIViewController, UITextFieldDelegate {
                         }
 
         }
+        print("gets out of AF Request")
     }
     
     
