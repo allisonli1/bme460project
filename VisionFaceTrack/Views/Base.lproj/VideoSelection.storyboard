@@ -9,83 +9,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Video Selection Main View Controller-->
-        <scene sceneID="HV3-gn-0Ot">
-            <objects>
-                <viewController id="tmC-Oc-O4k" customClass="VideoSelectionMainViewController" customModule="VisionFaceTrack" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Wqp-ec-5WW">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="lAv-eH-wf2">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="774"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fGz-pb-6SK">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
-                                        <subviews>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VnU-TE-tPL">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="40"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
-                                            </textField>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cIo-8o-N7V">
-                                                <rect key="frame" x="374" y="0.0" width="40" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="40" id="qFS-zS-QN4"/>
-                                                </constraints>
-                                                <state key="normal" image="magnifyingglass" catalog="system"/>
-                                            </button>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstItem="cIo-8o-N7V" firstAttribute="trailing" secondItem="fGz-pb-6SK" secondAttribute="trailing" id="Lw0-xH-By5"/>
-                                            <constraint firstAttribute="height" constant="40" id="lOH-T4-VdA"/>
-                                        </constraints>
-                                    </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2VM-ZV-FXk" customClass="YTPlayerView">
-                                        <rect key="frame" x="0.0" y="40" width="414" height="400"/>
-                                        <color key="backgroundColor" systemColor="labelColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="400" id="0sQ-11-FdC"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ua9-sh-TFD">
-                                        <rect key="frame" x="0.0" y="440" width="414" height="334"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRB-A3-7Sg">
-                                                <rect key="frame" x="186" y="156" width="42" height="21"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    </view>
-                                </subviews>
-                            </stackView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="Ghz-Qm-sxR"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="lAv-eH-wf2" firstAttribute="leading" secondItem="Ghz-Qm-sxR" secondAttribute="leading" id="18V-o4-4yl"/>
-                            <constraint firstItem="Ghz-Qm-sxR" firstAttribute="bottom" secondItem="lAv-eH-wf2" secondAttribute="bottom" id="Xrh-of-Pum"/>
-                            <constraint firstItem="Ghz-Qm-sxR" firstAttribute="trailing" secondItem="lAv-eH-wf2" secondAttribute="trailing" id="bCG-tf-LIj"/>
-                            <constraint firstItem="lAv-eH-wf2" firstAttribute="top" secondItem="Ghz-Qm-sxR" secondAttribute="top" id="k5s-vV-s15"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="CWR-Si-93I">
-                        <barButtonItem key="leftBarButtonItem" systemItem="save" id="Clz-4K-hWV"/>
-                    </navigationItem>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
-                    <connections>
-                        <outlet property="searchTerm" destination="VnU-TE-tPL" id="wHp-9n-iL7"/>
-                        <outlet property="youtubeView" destination="2VM-ZV-FXk" id="2wZ-jl-SKx"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Kag-Bw-MhB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1517" y="850"/>
-        </scene>
         <!--Playlist Selection View Controller-->
         <scene sceneID="lrb-is-DRL">
             <objects>
@@ -212,13 +135,19 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8JN-zU-7QW">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="97.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="77"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="33"/>
                                         <state key="normal" title="Add Videos"/>
                                         <connections>
                                             <segue destination="tNl-HA-gaX" kind="presentation" identifier="AddToPlaylist" modalPresentationStyle="fullScreen" id="TxO-7n-8S2"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNW-n1-TmQ">
+                                        <rect key="frame" x="0.0" y="77" width="414" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eHd-0y-xAL">
                                         <rect key="frame" x="0.0" y="97.5" width="414" height="579.5"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -315,6 +244,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="totDurLabel" destination="gNW-n1-TmQ" id="Nj6-QX-CyJ"/>
                         <outlet property="videoTable" destination="eHd-0y-xAL" id="VVe-TT-jCT"/>
                     </connections>
                 </viewController>
@@ -499,13 +429,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="tUj-Jf-VN8"/>
+        <segue reference="fyh-3F-mER"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

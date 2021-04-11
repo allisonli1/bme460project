@@ -25,6 +25,9 @@ class PlaylistSelectionViewController: UIViewController {
         if let savedPlaylists = loadPlaylists() {
             playlists += savedPlaylists
         }
+        else {
+            loadSamplePlaylists()
+        }
         // Do any additional setup after loading the view.
     }
     

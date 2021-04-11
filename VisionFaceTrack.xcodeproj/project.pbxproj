@@ -17,7 +17,6 @@
 		376F9C9C261D605100CA325B /* PlaylistCreation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 376F9C9A261D604F00CA325B /* PlaylistCreation.storyboard */; };
 		376F9C9F261D614100CA325B /* SavePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376F9C9E261D614100CA325B /* SavePlaylistViewController.swift */; };
 		37949CC02616CD170073FCED /* VideoSelection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37949CBE2616CD170073FCED /* VideoSelection.storyboard */; };
-		37949CC42616CF470073FCED /* VideoSelectionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CC32616CF470073FCED /* VideoSelectionMainViewController.swift */; };
 		37949CC726178EE80073FCED /* YouTubeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CC626178EE80073FCED /* YouTubeResult.swift */; };
 		37949CCD261794420073FCED /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CCC261794420073FCED /* SearchTableViewCell.swift */; };
 		37949CD026179A6F0073FCED /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CCF26179A6F0073FCED /* SearchViewController.swift */; };
@@ -26,7 +25,7 @@
 		37949CDD2617E0620073FCED /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CDC2617E0620073FCED /* Playlist.swift */; };
 		37949CE02617E0980073FCED /* EditPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CDF2617E0980073FCED /* EditPlaylistViewController.swift */; };
 		37949CE42617E7220073FCED /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37949CE32617E7220073FCED /* VideoTableViewCell.swift */; };
-		37DF794826019C180032C225 /* FaceDetection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37DF794626019C180032C225 /* FaceDetection.storyboard */; };
+		37ACB233262358D90020E107 /* FaceDetection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37ACB231262358D90020E107 /* FaceDetection.storyboard */; };
 		E1F2A12081F0BFCAB8D4EF95 /* Pods_VisionFaceTrack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3E39233405EE793FDAE4E15 /* Pods_VisionFaceTrack.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
@@ -44,7 +43,6 @@
 		376F9C9B261D604F00CA325B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PlaylistCreation.storyboard; sourceTree = "<group>"; };
 		376F9C9E261D614100CA325B /* SavePlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavePlaylistViewController.swift; sourceTree = "<group>"; };
 		37949CBF2616CD170073FCED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/VideoSelection.storyboard; sourceTree = "<group>"; };
-		37949CC32616CF470073FCED /* VideoSelectionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSelectionMainViewController.swift; sourceTree = "<group>"; };
 		37949CC626178EE80073FCED /* YouTubeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeResult.swift; sourceTree = "<group>"; };
 		37949CCC261794420073FCED /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		37949CCF26179A6F0073FCED /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -53,7 +51,7 @@
 		37949CDC2617E0620073FCED /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		37949CDF2617E0980073FCED /* EditPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPlaylistViewController.swift; sourceTree = "<group>"; };
 		37949CE32617E7220073FCED /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
-		37DF794726019C180032C225 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = VisionFaceTrack/Views/Base.lproj/FaceDetection.storyboard; sourceTree = "<group>"; };
+		37ACB232262358D90020E107 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/FaceDetection.storyboard; sourceTree = "<group>"; };
 		4231095939659F544A7FE2D5 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		5F07BB15BDCB081D94DCBAC9 /* Pods-VisionFaceTrack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionFaceTrack.release.xcconfig"; path = "Target Support Files/Pods-VisionFaceTrack/Pods-VisionFaceTrack.release.xcconfig"; sourceTree = "<group>"; };
 		F3E39233405EE793FDAE4E15 /* Pods_VisionFaceTrack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisionFaceTrack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,7 +117,6 @@
 				3725DF0725F3FB03002D9C0E /* HomeViewController.swift */,
 				37949CDC2617E0620073FCED /* Playlist.swift */,
 				28C69F4A204F6ACA00949F30 /* FaceDetectionController.swift */,
-				37949CC32616CF470073FCED /* VideoSelectionMainViewController.swift */,
 				37949CC626178EE80073FCED /* YouTubeResult.swift */,
 				37949CCC261794420073FCED /* SearchTableViewCell.swift */,
 				37949CCF26179A6F0073FCED /* SearchViewController.swift */,
@@ -137,7 +134,7 @@
 			children = (
 				376F9C9A261D604F00CA325B /* PlaylistCreation.storyboard */,
 				37949CBE2616CD170073FCED /* VideoSelection.storyboard */,
-				37DF794626019C180032C225 /* FaceDetection.storyboard */,
+				37ACB231262358D90020E107 /* FaceDetection.storyboard */,
 				28C69F4C204F6ACA00949F30 /* Main.storyboard */,
 				28C69F51204F6ACA00949F30 /* LaunchScreen.storyboard */,
 			);
@@ -239,11 +236,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37ACB233262358D90020E107 /* FaceDetection.storyboard in Resources */,
 				28C69F53204F6ACA00949F30 /* LaunchScreen.storyboard in Resources */,
 				37949CC02616CD170073FCED /* VideoSelection.storyboard in Resources */,
 				28C69F50204F6ACA00949F30 /* Assets.xcassets in Resources */,
 				288FF80C206DB231000932BA /* README.md in Resources */,
-				37DF794826019C180032C225 /* FaceDetection.storyboard in Resources */,
 				376F9C9C261D605100CA325B /* PlaylistCreation.storyboard in Resources */,
 				28C69F4E204F6ACA00949F30 /* Main.storyboard in Resources */,
 			);
@@ -307,7 +304,6 @@
 				37949CDD2617E0620073FCED /* Playlist.swift in Sources */,
 				28C69F4B204F6ACA00949F30 /* FaceDetectionController.swift in Sources */,
 				37949CC726178EE80073FCED /* YouTubeResult.swift in Sources */,
-				37949CC42616CF470073FCED /* VideoSelectionMainViewController.swift in Sources */,
 				37949CE02617E0980073FCED /* EditPlaylistViewController.swift in Sources */,
 				37949CD72617DCF50073FCED /* PlaylistSelectionViewController.swift in Sources */,
 				28C69F49204F6ACA00949F30 /* AppDelegate.swift in Sources */,
@@ -352,10 +348,10 @@
 			name = VideoSelection.storyboard;
 			sourceTree = "<group>";
 		};
-		37DF794626019C180032C225 /* FaceDetection.storyboard */ = {
+		37ACB231262358D90020E107 /* FaceDetection.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				37DF794726019C180032C225 /* Base */,
+				37ACB232262358D90020E107 /* Base */,
 			);
 			name = FaceDetection.storyboard;
 			sourceTree = "<group>";
@@ -481,6 +477,7 @@
 			baseConfigurationReference = 3008CCAF6722CB9E197E4E81 /* Pods-VisionFaceTrack.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3K553324P2;
 				INFOPLIST_FILE = "$(SRCROOT)/VisionFaceTrack/Info.plist";
@@ -499,6 +496,7 @@
 			baseConfigurationReference = 5F07BB15BDCB081D94DCBAC9 /* Pods-VisionFaceTrack.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3K553324P2;
 				INFOPLIST_FILE = "$(SRCROOT)/VisionFaceTrack/Info.plist";
