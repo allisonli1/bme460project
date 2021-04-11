@@ -58,7 +58,8 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var calibratedTiltAngle: Float = 0.0
     var calibrated: Bool = false
     var isCalibrating = false
-    var acceptableRange: Float = 4.0
+    var acceptableRangeInitial: Float = 5.0
+    var acceptableRange: Float = 5.0
     var outTiltLeft = false
     var outTiltRight = false
     var prevOutOfRange = false
@@ -74,7 +75,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var calibratedHeight: Float = 0.0
     var widthsForCalibration: [CGFloat] = []
     var heightsForCalibration: [CGFloat] = []
-    var originalProp: Float = 0.90
+    var originalProp: Float = 0.95
     var originalPropUp: Float = 0.98
     var acceptableProp: Float = 0.90
     var acceptablePropUp: Float = 0.95
@@ -120,8 +121,13 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         videoView.delegate = self
         warningFeedback.text = ""
         self.updatePlayButtonTitle(isPlaying: false)
-        senseLabel.text = "Sensitivity: 100%"
-        senseSlider.value = 1.0
+        if let sense = UserDefaults.standard.object(forKey: "sensitivity") as? Float {
+            senseSlider.value = sense
+        }
+        else {
+            senseSlider.value = 1.0
+        }
+        senseLabel.text = String(format: "Sensitivity: %0.0f%%", senseSlider.value * 100)
         playButton.isEnabled = false
         calibrateButton.isEnabled = false
         
@@ -792,18 +798,18 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         }
         
         if (!self.vidIsOpen) {
-            self.rootLayer?.isHidden = true
-            self.videoRootLayer?.isHidden = false
+            // self.rootLayer?.isHidden = true
+            // self.videoRootLayer?.isHidden = false
             self.updatePlayButtonTitle(isPlaying: true)
-            self.vidIsOpen = true
+            // self.vidIsOpen = true
             //self.player?.rate = 1.0
         } else {
-            self.rootLayer?.isHidden = false
-            self.videoRootLayer?.isHidden = true
+            // self.rootLayer?.isHidden = false
+            // self.videoRootLayer?.isHidden = true
 
             self.updatePlayButtonTitle(isPlaying: false)
             videoView.pauseVideo()
-            self.vidIsOpen = false
+            // self.vidIsOpen = false
         }
         
     }
@@ -811,7 +817,9 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     @IBAction func changeSensitivity(_ sender: UISlider) {
         self.acceptableProp = senseSlider.value * self.originalProp
         self.acceptablePropUp = senseSlider.value * self.originalPropUp
+        self.acceptableRange = 30 - senseSlider.value * 100 * 0.25
         senseLabel.text = String(format: "Sensitivity: %0.0f%%", senseSlider.value * 100)
+        UserDefaults.standard.set(senseSlider.value, forKey: "sensitivity")
     }
 }
 
@@ -861,7 +869,7 @@ extension FaceDetectionController {
             _ = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
                 if (self.prevOutOfRange) {
                     if (self.vidIsOpen) {
-                        self.rootLayer?.isHidden = false
+                        // self.rootLayer?.isHidden = false
                     }
                 }
             }
@@ -954,7 +962,7 @@ extension FaceDetectionController {
             self.animateArrows(animationType: 0)
             if (self.vidIsOpen) {
                 // self.player?.rate = 0.0
-                self.rootLayer?.isHidden = true
+                // self.rootLayer?.isHidden = true
                 videoView.playVideo()
             }
             prevOutOfRange = false
@@ -1096,7 +1104,6 @@ extension FaceDetectionController {
         self.session = self.setupAVCaptureSession()
         self.prepareVisionRequest()
         self.session?.startRunning()
-        self.videoView?.layer.isHidden = true
         self.initializeVideo()
         calibrateButton.isEnabled = true
         playButton.isEnabled = true

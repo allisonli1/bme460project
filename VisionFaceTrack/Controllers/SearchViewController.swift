@@ -34,15 +34,23 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // Hide the keyboard.
-        search()
         textField.resignFirstResponder()
+        search()
+        DispatchQueue.main.async {
+            self.resetTable()
+        }
         return true
     }
     
-    @IBAction func newSearch(_ sender: UIButton) {
+    
+    @IBAction func newSearch(_ sender: Any) {
         resetTable()
     }
+    
+    @IBAction func triggerForTextField(_ sender: Any) {
+        resetTable()
+    }
+    
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // Disable the Save button while editing.
@@ -69,7 +77,7 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
         if (self.searchTableView.numberOfRows(inSection: 0) > 0) {
             resetAccessoryType()
         }
-        searchTableView.reloadData()
+        self.searchTableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
