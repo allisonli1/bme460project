@@ -180,9 +180,10 @@
                                         <rect key="frame" x="0.0" y="30" width="1024" height="100"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8JN-zU-7QW">
-                                                <rect key="frame" x="430" y="24" width="164" height="52"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="33"/>
-                                                <state key="normal" title="Add Videos"/>
+                                                <rect key="frame" x="423" y="24" width="178" height="52"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="33"/>
+                                                <state key="normal" title=" Add Videos "/>
                                                 <connections>
                                                     <segue destination="tNl-HA-gaX" kind="presentation" identifier="AddToPlaylist" modalPresentationStyle="fullScreen" id="TxO-7n-8S2"/>
                                                 </connections>
@@ -292,15 +293,17 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="addVideo" destination="8JN-zU-7QW" id="a7g-fa-jN3"/>
                         <outlet property="swipeInstructionLabel" destination="Jb3-HC-bBw" id="mva-e4-6rM"/>
                         <outlet property="totDurLabel" destination="gNW-n1-TmQ" id="Nj6-QX-CyJ"/>
+                        <outlet property="useForFeedback" destination="aJb-X4-mOb" id="xOE-O8-UE6"/>
                         <outlet property="videoTable" destination="eHd-0y-xAL" id="VVe-TT-jCT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qsP-bq-KOp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="VJF-6Y-ch0" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3194" y="1531"/>
+            <point key="canvasLocation" x="3193.9453125" y="1530.7467057101023"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="za0-xA-hnr">

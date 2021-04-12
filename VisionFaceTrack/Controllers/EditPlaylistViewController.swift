@@ -14,6 +14,8 @@ class EditPlaylistViewController: UIViewController {
     @IBOutlet weak var videoTable: UITableView!
     @IBOutlet weak var totDurLabel: UILabel!
     @IBOutlet weak var swipeInstructionLabel: UILabel!
+    @IBOutlet weak var addVideo: UIButton!
+    @IBOutlet weak var useForFeedback: UIButton!
     
     var editMode = false
     var playlist: Playlist?
@@ -32,6 +34,10 @@ class EditPlaylistViewController: UIViewController {
         if let playlist = playlist {
             videos.append(contentsOf: playlist.videos)
         }
+        addVideo.layer.cornerRadius = 20
+        addVideo.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        addVideo.setTitleColor(UIColor.white, for: .normal)
+        addVideo.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 35)
         // Query youtube API
         getDurs()
         totDurLabel.text = ""
@@ -39,6 +45,10 @@ class EditPlaylistViewController: UIViewController {
         if (self.editMode) {
             swipeInstructionLabel.removeFromSuperview()
         }
+        useForFeedback.layer.cornerRadius = 20
+        useForFeedback.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        useForFeedback.setTitleColor(UIColor.white, for: .normal)
+        useForFeedback.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 35)
     }
     
     override func viewDidAppear(_ animated: Bool) {
