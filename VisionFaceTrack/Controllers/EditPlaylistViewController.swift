@@ -12,12 +12,10 @@ import Alamofire
 class EditPlaylistViewController: UIViewController {
     
     @IBOutlet weak var videoTable: UITableView!
-    
     @IBOutlet weak var totDurLabel: UILabel!
+    @IBOutlet weak var swipeInstructionLabel: UILabel!
     
-
-    
-    
+    var editMode = false
     var playlist: Playlist?
     var videos: [YouTubeResult] = []
     var totDur: Int = 0;
@@ -38,6 +36,9 @@ class EditPlaylistViewController: UIViewController {
         getDurs()
         totDurLabel.text = ""
         // Update totdur
+        if (self.editMode) {
+            swipeInstructionLabel.removeFromSuperview()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -165,7 +166,7 @@ class EditPlaylistViewController: UIViewController {
         let selectedVideos = videos
         
         // Set the playlist to be passed after the unwind segue.
-        playlist = Playlist(title: "")
+        playlist = Playlist(title: "", duration: "\(self.totDur)")
         for vid in selectedVideos {
             playlist?.addVideoID(videoID: vid.videoID)
             playlist?.addVideo(video: vid)

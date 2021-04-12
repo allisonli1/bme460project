@@ -20,13 +20,13 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     @IBOutlet weak var warningFeedback: UILabel!
     @IBOutlet var outerView: UIView!
     @IBOutlet weak var arrowImage: UIImageView!
-    @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var videoView: YTPlayerView!
     @IBOutlet weak var initialStackView: UIStackView!
     @IBOutlet weak var senseSlider: UISlider!
     @IBOutlet weak var senseLabel: UILabel!
     @IBOutlet weak var calibrateButton: UIButton!
-    
+    @IBOutlet weak var stopSessionButton: UIButton!
+    @IBOutlet weak var noVidLabel: UILabel!
     
     // AVCapture variables to hold sequence data
     var session: AVCaptureSession?
@@ -120,7 +120,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         // Initializing UI text
         videoView.delegate = self
         warningFeedback.text = ""
-        self.updatePlayButtonTitle(isPlaying: false)
         if let sense = UserDefaults.standard.object(forKey: "sensitivity") as? Float {
             senseSlider.value = sense
         }
@@ -128,8 +127,8 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             senseSlider.value = 1.0
         }
         senseLabel.text = String(format: "Sensitivity: %0.0f%%", senseSlider.value * 100)
-        playButton.isEnabled = false
         calibrateButton.isEnabled = false
+        stopSessionButton.isEnabled = false
         
     }
     
@@ -748,34 +747,29 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
             }
         }
     }
-    
-    // MARK: Navigation
+
     // MARK: Actions
     @IBAction func doneSession(_ sender: Any) {
         navigationController?.popViewController(animated: true)
         self.session?.stopRunning()
+        
         self.dismiss(animated: true, completion: nil)
     }
-    
-    
     
     @IBAction func startWithoutPlaylist(_ sender: UIButton) {
         
         initialStackView.removeFromSuperview()
-        
         self.session = self.setupAVCaptureSession()
         self.prepareVisionRequest()
         self.session?.startRunning()
-        self.videoView?.layer.isHidden = true
+        self.vidIsOpen = false
         calibrateButton.isEnabled = true
+        stopSessionButton.isEnabled = true
         
     }
     
-    
     @IBAction func calibrate(_ sender: UIButton) {
         self.anglesTiltForCalibration.removeAll()
-//        self.fromLeftForCalibration.removeAll()
-//        self.fromRightForCalibration.removeAll()
         self.leftEyeXPosForCalibration.removeAll()
         self.leftEyeHeightsForCalibration.removeAll()
         self.widthsForCalibration.removeAll()
@@ -790,30 +784,6 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         }
     }
     
-    @IBAction func playVideo(_ sender: UIButton) {
-        if self.videoRootLayer == nil {
-            if (self.videoList.count > 0) {
-                initializeVideo()
-            }
-        }
-        
-        if (!self.vidIsOpen) {
-            // self.rootLayer?.isHidden = true
-            // self.videoRootLayer?.isHidden = false
-            self.updatePlayButtonTitle(isPlaying: true)
-            // self.vidIsOpen = true
-            //self.player?.rate = 1.0
-        } else {
-            // self.rootLayer?.isHidden = false
-            // self.videoRootLayer?.isHidden = true
-
-            self.updatePlayButtonTitle(isPlaying: false)
-            videoView.pauseVideo()
-            // self.vidIsOpen = false
-        }
-        
-    }
-    
     @IBAction func changeSensitivity(_ sender: UISlider) {
         self.acceptableProp = senseSlider.value * self.originalProp
         self.acceptablePropUp = senseSlider.value * self.originalPropUp
@@ -821,6 +791,20 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         senseLabel.text = String(format: "Sensitivity: %0.0f%%", senseSlider.value * 100)
         UserDefaults.standard.set(senseSlider.value, forKey: "sensitivity")
     }
+    
+    @IBAction func stopFeedback(_ sender: UIButton) {
+        self.anglesTiltForCalibration.removeAll()
+        self.leftEyeXPosForCalibration.removeAll()
+        self.leftEyeHeightsForCalibration.removeAll()
+        self.widthsForCalibration.removeAll()
+        self.heightsForCalibration.removeAll()
+        arrowImage.image = nil
+        self.isCalibrating = false
+        self.calibrated = false
+        warningFeedback.text = "Not Calibrated"
+        
+    }
+    
 }
 
 
@@ -865,15 +849,15 @@ extension FaceDetectionController {
         let outTilt = !(self.checkTiltInRange(currAngle: currAngle))
         
         
-        if ((outHorizontal || outVertical || outTilt) && !prevOutOfRange) {
-            _ = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
-                if (self.prevOutOfRange) {
-                    if (self.vidIsOpen) {
-                        // self.rootLayer?.isHidden = false
-                    }
-                }
-            }
-        }
+//        if ((outHorizontal || outVertical || outTilt) && !prevOutOfRange) {
+//            _ = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
+//                if (self.prevOutOfRange) {
+//                    if (self.vidIsOpen) {
+//                        // self.rootLayer?.isHidden = false
+//                    }
+//                }
+//            }
+//        }
         if (outHorizontal || outVertical || outTilt) {
             prevOutOfRange = true
         }
@@ -899,9 +883,7 @@ extension FaceDetectionController {
                 prevAnimationType = 1
             }
             if (self.vidIsOpen) {
-                // self.player?.rate = 0.0
                 videoView.pauseVideo()
-                //videoView.setVolume()
             }
         }
         else if (outVertical) {
@@ -951,7 +933,6 @@ extension FaceDetectionController {
                 prevAnimationType = 1
             }
             if (self.vidIsOpen) {
-                // self.player?.rate = 0.0
                 videoView.pauseVideo()
             }
         }
@@ -961,8 +942,6 @@ extension FaceDetectionController {
             arrowImage.tintColor = .systemYellow
             self.animateArrows(animationType: 0)
             if (self.vidIsOpen) {
-                // self.player?.rate = 0.0
-                // self.rootLayer?.isHidden = true
                 videoView.playVideo()
             }
             prevOutOfRange = false
@@ -1037,13 +1016,6 @@ extension FaceDetectionController {
         return false
     }
     
-    fileprivate func updatePlayButtonTitle(isPlaying: Bool) {
-      if isPlaying {
-        playButton.setTitle("Pause", for: .normal)
-      } else {
-        playButton.setTitle("Play", for: .normal)
-      }
-    }
     
     fileprivate func initializeVideo() {
         if let previewVideoLayer = self.videoView?.layer {
@@ -1084,9 +1056,7 @@ extension FaceDetectionController {
                     default:
                         break
                     }
-                }, completion: {(finished:Bool) in
-                    // the code you put here will be compiled once the animation finishes
-                })
+                }, completion: nil)
             }
 
         }
@@ -1100,13 +1070,19 @@ extension FaceDetectionController {
             self.videoList.append(contentsOf: plist.videoIDs)
         }
         initialStackView.removeFromSuperview()
-        
         self.session = self.setupAVCaptureSession()
         self.prepareVisionRequest()
         self.session?.startRunning()
-        self.initializeVideo()
+        if (self.videoList.count != 0) {
+            noVidLabel.removeFromSuperview()
+            self.vidIsOpen = true
+            self.initializeVideo()
+        }
+        else {
+            self.vidIsOpen = false
+        }
         calibrateButton.isEnabled = true
-        playButton.isEnabled = true
+        stopSessionButton.isEnabled = true
     }
     
     @IBAction func cancelFromPopup(_ unwindSegue: UIStoryboardSegue) {

@@ -12,22 +12,35 @@ class PlaylistSelectionViewController: UIViewController {
 
     @IBOutlet weak var playlistTable: UITableView!
     var playlists =  [Playlist]()
+    @IBOutlet weak var playlistLabel: UILabel!
+    @IBOutlet weak var makePlaylistButton: UIButton!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loadSamplePlaylists()
         playlistTable.backgroundColor = UIColor.white
         playlistTable.delegate = self
         playlistTable.dataSource = self
+        playlistLabel.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 45)
+        playlistLabel.textColor = UIColor.black
+        playlistLabel.backgroundColor = UIColor.white
+        
+        makePlaylistButton.layer.cornerRadius = 20
+        makePlaylistButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        makePlaylistButton.setTitleColor(UIColor.white, for: .normal)
+        makePlaylistButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 35)
+        
+        playlistTable.separatorStyle = .none
         
         if let savedPlaylists = loadPlaylists() {
+            print("HERE")
             playlists += savedPlaylists
         }
         else {
             loadSamplePlaylists()
         }
+
         // Do any additional setup after loading the view.
     }
     
@@ -60,6 +73,7 @@ class PlaylistSelectionViewController: UIViewController {
              
             let selectedPlaylist = playlists[indexPath.row]
             playlistDetailViewController.playlist = selectedPlaylist
+            playlistDetailViewController.editMode = true
         case "ShowSavedPlaylist":
             guard let playlistDetailViewController = segue.destination as? (SavePlaylistViewController) else {
                 fatalError("Unexpected destination: \(segue.destination)")
@@ -75,7 +89,6 @@ class PlaylistSelectionViewController: UIViewController {
              
             let selectedPlaylist = playlists[indexPath.row]
             playlistDetailViewController.playlist = selectedPlaylist
-        
         default:
             break
         }
@@ -88,7 +101,7 @@ class PlaylistSelectionViewController: UIViewController {
     @IBAction func unwindToPlaylistList(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? SavePlaylistViewController, let plist = sourceViewController.playlist {
             print("\(plist.title)")
-
+            print("\(plist.duration)")
             if let selectedIndexPath = playlistTable.indexPathForSelectedRow {
 
                 // Update an existing playlist.
@@ -110,6 +123,10 @@ class PlaylistSelectionViewController: UIViewController {
 
     }
     
+    @IBAction func unwindFromCancel(sender: UIStoryboardSegue) {
+        
+    }
+    
     //MARK: Private Methods
     private func loadSamplePlaylists() {
         
@@ -121,7 +138,7 @@ class PlaylistSelectionViewController: UIViewController {
         
         let YTVideo4 = YouTubeResult(title:"Idina Menzel - Let It Go (from Frozen) (Official Video)", videoID:"YVVTZgwYwVo", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/YVVTZgwYwVo/default.jpg", duration:"")
 
-        let playlist1 = Playlist(title: "Disney Music")
+        let playlist1 = Playlist(title: "Disney Music", duration: "836")
         playlist1.addVideo(video: YTVideo1)
         playlist1.addVideo(video: YTVideo2)
         playlist1.addVideo(video: YTVideo3)
@@ -137,7 +154,7 @@ class PlaylistSelectionViewController: UIViewController {
     }
     
     private func savePlaylists() {
-        print("HERE")
+        print("Saving Playlists")
         _ = NSKeyedArchiver.archiveRootObject(playlists, toFile: Playlist.ArchiveURL.path)
         
     }
@@ -145,6 +162,28 @@ class PlaylistSelectionViewController: UIViewController {
     private func loadPlaylists() -> [Playlist]?  {
         return NSKeyedUnarchiver.unarchiveObject(withFile: Playlist.ArchiveURL.path) as? [Playlist]
     }
+    
+    func totDurToString(totDur: Int) -> String {
+        // Reset total duration of playlist to 0, helps if just updating from a non-zero val
+        let hours = Int(totDur/3600)
+        let mins = Int((totDur - 3600*hours)/60)
+        let secs = Int((totDur - 3600*hours - 60*mins))
+        // print("\(hours) hours, \(mins) mins, \(secs) secs")
+        var dispDur = ""
+        if hours > 0 {
+            dispDur += String(hours) + " hours, "
+        }
+        if mins > 0 {
+            dispDur += String(mins) + " minutes, "
+        }
+        if secs > 0 {
+            dispDur += String(secs) + " seconds"
+        }
+        // print(dispDur)
+        return dispDur
+    }
+    
+    
     
 
 }
@@ -172,12 +211,27 @@ extension PlaylistSelectionViewController: UITableViewDataSource, UITableViewDel
         }
         
         let plist = self.playlists[indexPath.row]
-        tableView.rowHeight = 80
+        print("Duration: \(plist.duration)")
+        tableView.rowHeight = 160
 
         print("Makes the cell")
         cell.nameLabel.text = plist.title
+        cell.nameLabel.font = UIFont(name: "AppleSDGothicNeo-Light", size: 30)
         cell.numVideosLabel.text = "Videos: \(plist.videos.count)"
+        cell.numVideosLabel.font = UIFont(name: "AppleSDGothicNeo-Light", size: 20)
+        cell.nameLabel.textColor = UIColor.white
+        cell.numVideosLabel.textColor = UIColor.white
+        cell.totDurLabel.text = "Playlist Duration: " + totDurToString(totDur: Int(plist.duration) ?? 0)
+        cell.totDurLabel.font = UIFont(name: "AppleSDGothicNeo-Light", size: 20)
+        cell.totDurLabel.textColor = UIColor.white
+        cell.containerView.layer.cornerRadius = 20
+        cell.containerView.layer.shadowOpacity = 0.5
+        cell.containerView.layer.shadowRadius = 2
+        cell.containerView.layer.shadowColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        cell.containerView.layer.shadowOffset = CGSize(width: 3, height: 3)
+        cell.containerView.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1)
         return cell
+
     }
     
     // Override to support conditional editing of the table view.

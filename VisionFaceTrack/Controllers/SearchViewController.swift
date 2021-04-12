@@ -30,13 +30,14 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
         searchTableView.allowsMultipleSelection = true
         searchTerm.delegate = self
         searchTableView.backgroundColor = UIColor.white
+        // searchButton.isEnabled = false
         
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
         search()
-        DispatchQueue.main.async {
+        textField.resignFirstResponder()
+        _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) {_ in
             self.resetTable()
         }
         return true
@@ -44,25 +45,16 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func newSearch(_ sender: Any) {
-        resetTable()
-    }
-    
-    @IBAction func triggerForTextField(_ sender: Any) {
-        resetTable()
-    }
-    
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        // Disable the Save button while editing.
-        searchButton.isEnabled = false
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        let text = textField.text ?? ""
+        let text = searchTerm.text ?? ""
+        search()
         if (!text.isEmpty) {
-            searchButton.isEnabled = true
+            _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) {_ in
+                self.resetTable()
+            }
         }
     }
+    
+    
     
     func resetAccessoryType() {
         for section in 0...(self.searchTableView.numberOfSections - 1) {
@@ -74,8 +66,9 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
     }
     
     func resetTable() {
+        print("HHHH")
         if (self.searchTableView.numberOfRows(inSection: 0) > 0) {
-            resetAccessoryType()
+            self.resetAccessoryType()
         }
         self.searchTableView.reloadData()
     }

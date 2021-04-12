@@ -12,11 +12,13 @@ class Playlist: NSObject, NSCoding {
     var title: String
     var videos: [YouTubeResult]
     var videoIDs: [String]
+    var duration: String
     
     struct PropertyKey {
         static let title = "title"
         static let videos = "videos"
         static let videoIDs = "videoIDs"
+        static let duration = "duration"
     }
     
     //MARK: Archiving Paths
@@ -24,14 +26,20 @@ class Playlist: NSObject, NSCoding {
     static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
     static let ArchiveURL = DocumentsDirectory.appendingPathComponent("playlists")
     
-    init(title: String) {
+    init(title: String, duration: String) {
         self.title = title
         self.videos = []
         self.videoIDs = []
+        self.duration = duration
     }
+    
     
     func setTitle(title: String) {
         self.title = title
+    }
+    
+    func setDuration(duration: String) {
+        self.duration = duration
     }
     
     func addVideo(video: YouTubeResult) {
@@ -48,6 +56,7 @@ class Playlist: NSObject, NSCoding {
         aCoder.encode(title, forKey: PropertyKey.title)
         aCoder.encode(videos, forKey: PropertyKey.videos)
         aCoder.encode(videoIDs, forKey: PropertyKey.videoIDs)
+        aCoder.encode(duration, forKey: PropertyKey.duration)
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -59,11 +68,13 @@ class Playlist: NSObject, NSCoding {
         
         // Because photo is an optional property of Meal, just use conditional cast.
         let videos = aDecoder.decodeObject(forKey: PropertyKey.videos) as? [YouTubeResult]
-
-        
         _ = aDecoder.decodeObject(forKey: PropertyKey.videoIDs) as? [String]
         
-        self.init(title: title)
+        guard let duration = aDecoder.decodeObject(forKey: PropertyKey.duration) as? String else {
+            return nil
+        }
+        
+        self.init(title: title, duration: duration)
         if let vids = videos {
             for v in vids {
                 self.addVideo(video: v)
