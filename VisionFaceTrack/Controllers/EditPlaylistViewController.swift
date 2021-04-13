@@ -14,6 +14,7 @@ class EditPlaylistViewController: UIViewController {
     @IBOutlet weak var videoTable: UITableView!
     @IBOutlet weak var totDurLabel: UILabel!
     @IBOutlet weak var swipeInstructionLabel: UILabel!
+
     @IBOutlet weak var addVidsButton: UIButton!
     @IBOutlet weak var useForSessionButton: UIButton!
     
@@ -60,6 +61,7 @@ class EditPlaylistViewController: UIViewController {
         addVidsButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
         addVidsButton.setTitleColor(UIColor.white, for: .normal)
         addVidsButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 35)
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
