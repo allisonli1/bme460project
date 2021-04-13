@@ -178,7 +178,7 @@ extension SearchViewController {
                                             video.setChannel(channel: snip["channelTitle"] as! String)
                                             video.setDescription(description: snip["description"] as! String)
                                             if let thumbnails = snip["thumbnails"] as? [String: Any] {
-                                                if let imURL = thumbnails["default"] as? [String: Any] {
+                                                if let imURL = thumbnails["high"] as? [String: Any] {
                                                     video.setImageURL(imageURL: imURL["url"] as! String)
                                                 }
                                             }
