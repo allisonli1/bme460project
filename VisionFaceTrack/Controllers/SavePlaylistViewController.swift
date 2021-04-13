@@ -15,6 +15,7 @@ class SavePlaylistViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var saveVideoTable: UITableView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var totDurLabel: UILabel!
+    @IBOutlet weak var addVidsButton: UIButton!
     
     let API_KEY = "AIzaSyCfm9iBIi02F_6G8QhHZesCVbjmwvwwkxQ"
     var totDur: Int = 0;
@@ -25,6 +26,7 @@ class SavePlaylistViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        overrideUserInterfaceStyle = .light
         nameTextField.delegate = self
         saveVideoTable.delegate = self
         saveVideoTable.dataSource = self
@@ -32,10 +34,17 @@ class SavePlaylistViewController: UIViewController, UITextFieldDelegate {
         saveVideoTable.dragInteractionEnabled = true
         saveVideoTable.backgroundColor = UIColor.white
         
-        nameTextField.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 30)
+        totDurLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
+        
+        nameTextField.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 30)
         nameTextField.textColor = UIColor.black
         nameTextField.backgroundColor = UIColor.white
         totDurLabel.textColor = UIColor.systemGray
+        
+        addVidsButton.layer.cornerRadius = 20
+        addVidsButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        addVidsButton.setTitleColor(UIColor.white, for: .normal)
+        addVidsButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 35)
         
         if let playlist = playlist {
             videos.append(contentsOf: playlist.videos)
@@ -140,8 +149,8 @@ extension SavePlaylistViewController: UITableViewDataSource, UITableViewDelegate
 
         print("Makes the cell")
         cell.setVideo(video: video)
-        cell.titleLabel.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 30)
-        cell.channelLabel.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 20)
+        cell.titleLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 25)
+        cell.channelLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
         return cell
     }
     
@@ -189,7 +198,7 @@ extension SavePlaylistViewController {
                                               "id":vidIDs])
             .responseJSON { response in
                         if let value = response.value as? [String: AnyObject] {
-                            for (index, key_value) in value.enumerated() {
+                            for (_, key_value) in value.enumerated() {
                                 //print("key_value: \(key_value)")
                                 if let arr = key_value.value as? [[String: Any]] {
                                     // print("arr: \(arr)")
@@ -199,7 +208,7 @@ extension SavePlaylistViewController {
                                         if let contDet = i["contentDetails"] as? [String: Any] {
                                             // print("contDet: \(contDet)")
                                             // print("contDet[\"duration\"]: \(contDet["duration"]!)") // WORKS
-                                            var time_in_sec = self.convertPTtoSec(PT:contDet["duration"] as! String)
+                                            let time_in_sec = self.convertPTtoSec(PT:contDet["duration"] as! String)
                                             for vid in self.videos {
                                                 if vid.videoID == thisID {
                                                     vid.setDuration(duration:time_in_sec)

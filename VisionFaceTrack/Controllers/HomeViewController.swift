@@ -17,17 +17,17 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        overrideUserInterfaceStyle = .light
         // Set up Butons
-        startSessionButton.layer.cornerRadius = 20
+        startSessionButton.layer.cornerRadius = 40
         startSessionButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
         startSessionButton.setTitleColor(UIColor.white, for: .normal)
-        startSessionButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 35)
+        startSessionButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 50)
         
-        seePlaylistsButton.layer.cornerRadius = 20
+        seePlaylistsButton.layer.cornerRadius = 40
         seePlaylistsButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
         seePlaylistsButton.setTitleColor(UIColor.white, for: .normal)
-        seePlaylistsButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 35)
+        seePlaylistsButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 50)
         
         
     }

@@ -18,18 +18,18 @@ class PlaylistSelectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        overrideUserInterfaceStyle = .light
         playlistTable.backgroundColor = UIColor.white
         playlistTable.delegate = self
         playlistTable.dataSource = self
-        playlistLabel.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 45)
+        playlistLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 45)
         playlistLabel.textColor = UIColor.black
         playlistLabel.backgroundColor = UIColor.white
         
         makePlaylistButton.layer.cornerRadius = 20
         makePlaylistButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
         makePlaylistButton.setTitleColor(UIColor.white, for: .normal)
-        makePlaylistButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 35)
+        makePlaylistButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 35)
         
         playlistTable.separatorStyle = .none
         
@@ -225,10 +225,10 @@ extension PlaylistSelectionViewController: UITableViewDataSource, UITableViewDel
         cell.totDurLabel.font = UIFont(name: "AppleSDGothicNeo-Light", size: 20)
         cell.totDurLabel.textColor = UIColor.white
         cell.containerView.layer.cornerRadius = 20
-        cell.containerView.layer.shadowOpacity = 0.5
-        cell.containerView.layer.shadowRadius = 2
-        cell.containerView.layer.shadowColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
-        cell.containerView.layer.shadowOffset = CGSize(width: 3, height: 3)
+        cell.containerView.layer.shadowOpacity = 0.6
+        cell.containerView.layer.shadowRadius = 4
+        cell.containerView.layer.shadowColor = UIColor(red: 0.930, green: 0.569, blue: 0.730, alpha: 1).cgColor
+        cell.containerView.layer.shadowOffset = CGSize(width: 6, height: 6)
         cell.containerView.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1)
         return cell
 

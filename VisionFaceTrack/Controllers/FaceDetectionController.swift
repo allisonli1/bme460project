@@ -26,7 +26,11 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     @IBOutlet weak var senseLabel: UILabel!
     @IBOutlet weak var calibrateButton: UIButton!
     @IBOutlet weak var stopSessionButton: UIButton!
+    @IBOutlet weak var selectPlaylistButton: UIButton!
+    @IBOutlet weak var startWithoutButton: UIButton!
+    @IBOutlet weak var initialCamLabel: UILabel!
     @IBOutlet weak var noVidLabel: UILabel!
+    
     
     // AVCapture variables to hold sequence data
     var session: AVCaptureSession?
@@ -92,6 +96,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var runningAvgCurrXPosArr: [Float] = []
     var runningAvgCurrYPos: Float = -1
     var runningAvgCurrYPosArr: [Float] = []
+    var sensitivityValue: Float = 1.0
     
     var prevAnimationType: Int = 0
     
@@ -105,30 +110,49 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Ask to Initialize Playlist First
-        
-        /*
-        self.session = self.setupAVCaptureSession()
-        
-        self.prepareVisionRequest()
-        
-        self.session?.startRunning()
-        
-        self.videoView?.layer.isHidden = true
-        */
         // Initializing UI text
+        overrideUserInterfaceStyle = .light
         videoView.delegate = self
+        initialCamLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
+        noVidLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
+        senseLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
+        warningFeedback.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 30)
+        
+        calibrateButton.layer.cornerRadius = 20
+        calibrateButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        calibrateButton.setTitleColor(UIColor.white, for: .normal)
+        calibrateButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 30)
+        
+        stopSessionButton.layer.cornerRadius = 20
+        stopSessionButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        stopSessionButton.setTitleColor(UIColor.white, for: .normal)
+        stopSessionButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 30)
+        
+        selectPlaylistButton.layer.cornerRadius = 20
+        selectPlaylistButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        selectPlaylistButton.setTitleColor(UIColor.white, for: .normal)
+        selectPlaylistButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 30)
+        
+        startWithoutButton.layer.cornerRadius = 20
+        startWithoutButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        startWithoutButton.setTitleColor(UIColor.white, for: .normal)
+        startWithoutButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 30)
+
         warningFeedback.text = ""
         if let sense = UserDefaults.standard.object(forKey: "sensitivity") as? Float {
             senseSlider.value = sense
+            self.sensitivityValue = sense
         }
         else {
             senseSlider.value = 1.0
+            self.sensitivityValue = 1.0
         }
         senseLabel.text = String(format: "Sensitivity: %0.0f%%", senseSlider.value * 100)
         calibrateButton.isEnabled = false
+        changeButtonStatus(button: calibrateButton)
         stopSessionButton.isEnabled = false
+        changeButtonStatus(button: stopSessionButton)
+        noVidLabel.text = ""
         
     }
     
@@ -583,7 +607,13 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
                 self.leftEyeXPosForCalibration.append(leftNorm.x)
             }
             if (self.calibrated) {
-                self.checkPosition(currAngle: runningAvgCurrAngle, currXPos: runningAvgCurrXPos, currYPos: runningAvgCurrYPos)
+                if (self.sensitivityValue > 0) {
+                    self.checkPosition(currAngle: runningAvgCurrAngle, currXPos: runningAvgCurrXPos, currYPos: runningAvgCurrYPos)
+                }
+                else {
+                    warningFeedback.text = "0% Sensitivity"
+                    self.arrowImage.image = nil
+                }
                 if let calibratedFace = self.calibratedFaceOutline {
                     if let calibratedAT = self.calibratedAffineTransform {
                         self.addPoints(in: calibratedFace, to: linePath, applying: calibratedAT, closingWhenComplete: false)
@@ -757,14 +787,21 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     }
     
     @IBAction func startWithoutPlaylist(_ sender: UIButton) {
-        
-        initialStackView.removeFromSuperview()
+        if (startWithoutButton != nil) {
+            startWithoutButton.removeFromSuperview()
+        }
+        noVidLabel.text = "Warning: No Videos Queued"
+        if (initialCamLabel != nil) {
+            initialCamLabel.removeFromSuperview()
+        }
         self.session = self.setupAVCaptureSession()
         self.prepareVisionRequest()
         self.session?.startRunning()
         self.vidIsOpen = false
         calibrateButton.isEnabled = true
+        changeButtonStatus(button: calibrateButton)
         stopSessionButton.isEnabled = true
+        changeButtonStatus(button: stopSessionButton)
         
     }
     
@@ -789,6 +826,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         self.acceptablePropUp = senseSlider.value * self.originalPropUp
         self.acceptableRange = 30 - senseSlider.value * 100 * 0.25
         senseLabel.text = String(format: "Sensitivity: %0.0f%%", senseSlider.value * 100)
+        self.sensitivityValue = senseSlider.value
         UserDefaults.standard.set(senseSlider.value, forKey: "sensitivity")
     }
     
@@ -1069,23 +1107,44 @@ extension FaceDetectionController {
             
             self.videoList.append(contentsOf: plist.videoIDs)
         }
-        initialStackView.removeFromSuperview()
         self.session = self.setupAVCaptureSession()
         self.prepareVisionRequest()
         self.session?.startRunning()
+        if (initialCamLabel != nil) {
+            initialCamLabel.removeFromSuperview()
+        }
+        
         if (self.videoList.count != 0) {
-            noVidLabel.removeFromSuperview()
+            if (initialStackView != nil) {
+                initialStackView.removeFromSuperview()
+            }
             self.vidIsOpen = true
             self.initializeVideo()
         }
         else {
             self.vidIsOpen = false
+            if (startWithoutButton != nil) {
+                startWithoutButton.removeFromSuperview()
+            }
+            noVidLabel.text = "Warning: No Videos Queued"
         }
         calibrateButton.isEnabled = true
+        changeButtonStatus(button: calibrateButton)
         stopSessionButton.isEnabled = true
+        changeButtonStatus(button: stopSessionButton)
     }
     
     @IBAction func cancelFromPopup(_ unwindSegue: UIStoryboardSegue) {
+        
+    }
+    
+    fileprivate func changeButtonStatus(button: UIButton) {
+        if (button.isEnabled) { // enabled a button
+            button.layer.opacity = 1.0
+        }
+        else {
+            button.layer.opacity = 0.2
+        }
         
     }
     

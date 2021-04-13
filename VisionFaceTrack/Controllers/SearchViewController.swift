@@ -23,7 +23,7 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        overrideUserInterfaceStyle = .light
         // Do any additional setup after loading the view.
         searchTableView.delegate = self
         searchTableView.dataSource = self
@@ -31,6 +31,10 @@ class SearchViewController: UIViewController, UITextFieldDelegate {
         searchTerm.delegate = self
         searchTableView.backgroundColor = UIColor.white
         // searchButton.isEnabled = false
+        
+        searchTerm.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 30)
+        searchTerm.textColor = UIColor.black
+        searchTerm.backgroundColor = UIColor.white
         
     }
     
@@ -104,11 +108,14 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? SearchTableViewCell  else {
             fatalError("The dequeued cell is not an instance of SearchTableViewCell.")
         }
-        tableView.rowHeight = 90
+        tableView.rowHeight = 135
         
         let video = self.videos[indexPath.row]
         print("Makes the cell")
         cell.setVideo(video: video)
+        
+        cell.titleLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 25)
+        cell.channelLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
         
         var hasVideo = false
         let newVideoID = video.videoID
@@ -166,7 +173,7 @@ extension SearchViewController {
                                         let video = YouTubeResult(title:"", videoID:"", channel:"", description:"", imageURL:"", duration:"")
                                         if let snip = i["snippet"] as? [String: Any] {
                                             let tempTitle = snip["title"] as! String
-                                            let realTitle = tempTitle.replacingOccurrences(of: "&#39;", with: "'").replacingOccurrences(of: "&quot;", with: "\"")
+                                            let realTitle = tempTitle.replacingOccurrences(of: "&#39;", with: "'").replacingOccurrences(of: "&quot;", with: "\"").replacingOccurrences(of: "&amp;", with: "&")
                                             video.setTitle(title: realTitle)
                                             video.setChannel(channel: snip["channelTitle"] as! String)
                                             video.setDescription(description: snip["description"] as! String)

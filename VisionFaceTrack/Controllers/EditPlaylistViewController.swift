@@ -14,6 +14,8 @@ class EditPlaylistViewController: UIViewController {
     @IBOutlet weak var videoTable: UITableView!
     @IBOutlet weak var totDurLabel: UILabel!
     @IBOutlet weak var swipeInstructionLabel: UILabel!
+    @IBOutlet weak var addVidsButton: UIButton!
+    @IBOutlet weak var useForSessionButton: UIButton!
     
     var editMode = false
     var playlist: Playlist?
@@ -23,6 +25,7 @@ class EditPlaylistViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        overrideUserInterfaceStyle = .light
         totDurLabel.textColor = UIColor.systemGray
         videoTable.delegate = self
         videoTable.dataSource = self
@@ -37,8 +40,26 @@ class EditPlaylistViewController: UIViewController {
         totDurLabel.text = ""
         // Update totdur
         if (self.editMode) {
-            swipeInstructionLabel.removeFromSuperview()
+            if (swipeInstructionLabel != nil) {
+                swipeInstructionLabel.removeFromSuperview()
+            }
         }
+        else {
+            swipeInstructionLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
+        }
+        
+        totDurLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
+        
+        useForSessionButton.layer.cornerRadius = 20
+        useForSessionButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        useForSessionButton.setTitleColor(UIColor.white, for: .normal)
+        useForSessionButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 35)
+        
+        
+        addVidsButton.layer.cornerRadius = 20
+        addVidsButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
+        addVidsButton.setTitleColor(UIColor.white, for: .normal)
+        addVidsButton.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 35)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -60,7 +81,7 @@ class EditPlaylistViewController: UIViewController {
                                               "id":vidIDs])
             .responseJSON { response in
                         if let value = response.value as? [String: AnyObject] {
-                            for (index, key_value) in value.enumerated() {
+                            for (_, key_value) in value.enumerated() {
                                 //print("key_value: \(key_value)")
                                 if let arr = key_value.value as? [[String: Any]] {
                                     // print("arr: \(arr)")
@@ -70,7 +91,7 @@ class EditPlaylistViewController: UIViewController {
                                         if let contDet = i["contentDetails"] as? [String: Any] {
                                             // print("contDet: \(contDet)")
                                             // print("contDet[\"duration\"]: \(contDet["duration"]!)") // WORKS
-                                            var time_in_sec = self.convertPTtoSec(PT:contDet["duration"] as! String)
+                                            let time_in_sec = self.convertPTtoSec(PT:contDet["duration"] as! String)
                                             for vid in self.videos {
                                                 if vid.videoID == thisID {
                                                     vid.setDuration(duration:time_in_sec)
@@ -222,10 +243,12 @@ extension EditPlaylistViewController: UITableViewDataSource, UITableViewDelegate
         }
         
         let video = self.videos[indexPath.row]
-        tableView.rowHeight = 90
+        tableView.rowHeight = 135
 
         print("Makes the cell")
         cell.setVideo(video: video)
+        cell.titleLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 25)
+        cell.channelLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
         return cell
     }
     
