@@ -130,13 +130,13 @@ class PlaylistSelectionViewController: UIViewController {
     //MARK: Private Methods
     private func loadSamplePlaylists() {
         
-        let YTVideo1 = YouTubeResult(title:"Auli'i Cravalho - How Far I'll Go", videoID:"cPAbx5kgCJo", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/cPAbx5kgCJo/default.jpg", duration:"")
+        let YTVideo1 = YouTubeResult(title:"Auli'i Cravalho - How Far I'll Go", videoID:"cPAbx5kgCJo", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/cPAbx5kgCJo/hqdefault.jpg", duration:"")
         
-        let YTVideo2 = YouTubeResult(title:"Carmen Twillie, Lebo M. - Circle Of Life (Official Video from \"The Lion King\")", videoID:"GibiNy4d4gc", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/GibiNy4d4gc/default.jpg", duration:"")
+        let YTVideo2 = YouTubeResult(title:"Carmen Twillie, Lebo M. - Circle Of Life (Official Video from \"The Lion King\")", videoID:"GibiNy4d4gc", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/GibiNy4d4gc/hqdefault.jpg", duration:"")
         
-        let YTVideo3 = YouTubeResult(title:"The Little Mermaid - Under the Sea (from The Little Mermaid) (Official Video)", videoID:"GC_mV1IpjWA", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/GC_mV1IpjWA/default.jpg", duration:"")
+        let YTVideo3 = YouTubeResult(title:"The Little Mermaid - Under the Sea (from The Little Mermaid) (Official Video)", videoID:"GC_mV1IpjWA", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/GC_mV1IpjWA/hqdefault.jpg", duration:"")
         
-        let YTVideo4 = YouTubeResult(title:"Idina Menzel - Let It Go (from Frozen) (Official Video)", videoID:"YVVTZgwYwVo", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/YVVTZgwYwVo/default.jpg", duration:"")
+        let YTVideo4 = YouTubeResult(title:"Idina Menzel - Let It Go (from Frozen) (Official Video)", videoID:"YVVTZgwYwVo", channel:"DisneyMusicVEVO", description:"", imageURL:"https://i.ytimg.com/vi/YVVTZgwYwVo/hqdefault.jpg", duration:"")
 
         let playlist1 = Playlist(title: "Disney Music", duration: "836")
         playlist1.addVideo(video: YTVideo1)
@@ -150,6 +150,7 @@ class PlaylistSelectionViewController: UIViewController {
         playlist1.addVideoID(videoID: YTVideo4.videoID)
         
         playlists.append(playlist1)
+        self.savePlaylists()
         
     }
     

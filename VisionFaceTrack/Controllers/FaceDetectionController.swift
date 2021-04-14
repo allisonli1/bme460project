@@ -156,6 +156,13 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        self.session?.stopRunning()
+        if (self.videoList.count > 0) {
+            self.videoView?.stopVideo()
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -780,9 +787,11 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
 
     // MARK: Actions
     @IBAction func doneSession(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
         self.session?.stopRunning()
-        
+        self.previewLayer?.removeFromSuperlayer()
+        self.videoView?.removeFromSuperview()
+        // navigationController?.popViewController(animated: true)
+        print("HERE in done")
         self.dismiss(animated: true, completion: nil)
     }
     
