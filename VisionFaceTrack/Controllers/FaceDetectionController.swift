@@ -30,6 +30,11 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     @IBOutlet weak var startWithoutButton: UIButton!
     @IBOutlet weak var initialCamLabel: UILabel!
     @IBOutlet weak var noVidLabel: UILabel!
+    @IBOutlet weak var autoCalSwitch: UISwitch!
+    @IBOutlet weak var timeBetweenCalStepper: UIStepper!
+    @IBOutlet weak var timeBetweenCalLabel: UILabel!
+    @IBOutlet weak var autoView: UIView!
+    
     
     
     // AVCapture variables to hold sequence data
@@ -66,7 +71,8 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var acceptableRange: Float = 5.0
     var outTiltLeft = false
     var outTiltRight = false
-    var prevOutOfRange = false
+    var isOut = false
+    var timeBetweenCalValue: Double = 0
     
     // Feedback indicators for up + down movement
     var outDown = false
@@ -98,6 +104,8 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     var runningAvgCurrYPosArr: [Float] = []
     var sensitivityValue: Float = 1.0
     
+    var firstTimeOut: Bool = false
+    
     var prevAnimationType: Int = 0
     
     // Video Player Variables
@@ -117,6 +125,24 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         noVidLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
         senseLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 20)
         warningFeedback.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 30)
+        
+        autoView.layer.borderWidth = 3
+        autoView.layer.borderColor = UIColor.black.cgColor
+        autoCalSwitch.isOn = false
+        timeBetweenCalStepper.isEnabled = false
+        timeBetweenCalLabel.font = UIFont(name: "AppleSDGothicNeo-UltraLight", size: 16)
+        timeBetweenCalLabel.textColor = UIColor.systemGray
+        if let timeBetweenCal = UserDefaults.standard.object(forKey: "timeBetweenCal") as? Double {
+            timeBetweenCalStepper.value = timeBetweenCal
+            timeBetweenCalLabel.text = "Auto-calibrate after " + String(format: "%0.0f second(s)", timeBetweenCal)
+            self.timeBetweenCalValue = timeBetweenCal
+        }
+        else {
+            timeBetweenCalStepper.value = 20
+            self.timeBetweenCalValue = 20
+            timeBetweenCalLabel.text = "Auto-calibrate after 20 second(s)"
+            
+        }
         
         calibrateButton.layer.cornerRadius = 20
         calibrateButton.layer.backgroundColor = UIColor(red: 0.256, green: 0.389, blue: 0.740, alpha: 1).cgColor
@@ -815,19 +841,7 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
     }
     
     @IBAction func calibrate(_ sender: UIButton) {
-        self.anglesTiltForCalibration.removeAll()
-        self.leftEyeXPosForCalibration.removeAll()
-        self.leftEyeHeightsForCalibration.removeAll()
-        self.widthsForCalibration.removeAll()
-        self.heightsForCalibration.removeAll()
-        warningFeedback.text = "CALIBRATING..."
-        arrowImage.image = nil
-        self.isCalibrating = true
-        self.calibrated = false
-        _ = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
-            self.fixAngle()
-            self.isCalibrating = false
-        }
+        self.doCalibration()
     }
     
     @IBAction func changeSensitivity(_ sender: UISlider) {
@@ -852,11 +866,46 @@ class FaceDetectionController: UIViewController, AVCaptureVideoDataOutputSampleB
         
     }
     
+    @IBAction func setAutoCalPreference(_ sender: UISwitch) {
+        if (autoCalSwitch.isOn) {
+            timeBetweenCalStepper.isEnabled = true
+            timeBetweenCalLabel.textColor = UIColor.black
+        }
+        else {
+            timeBetweenCalStepper.isEnabled = false
+            timeBetweenCalLabel.textColor = UIColor.systemGray
+        }
+    }
+    
+    @IBAction func saveTimeBetween(_ sender: UIStepper) {
+        self.timeBetweenCalValue = timeBetweenCalStepper.value
+        timeBetweenCalLabel.text = "Auto-calibrate after " + String(format: "%0.0f second(s)", timeBetweenCalStepper.value)
+        UserDefaults.standard.set(timeBetweenCalStepper.value, forKey: "timeBetweenCal")
+    }
+    
+    
+    
 }
 
 
 // MARK: - Helpers
 extension FaceDetectionController {
+    fileprivate func doCalibration() {
+        self.anglesTiltForCalibration.removeAll()
+        self.leftEyeXPosForCalibration.removeAll()
+        self.leftEyeHeightsForCalibration.removeAll()
+        self.widthsForCalibration.removeAll()
+        self.heightsForCalibration.removeAll()
+        warningFeedback.text = "CALIBRATING..."
+        arrowImage.image = nil
+        self.isCalibrating = true
+        self.calibrated = false
+        _ = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) {_ in
+            self.fixAngle()
+            self.isCalibrating = false
+        }
+    }
+    
     fileprivate func angleBetweenThreePoints(center: CGPoint, firstPoint: CGPoint, secondPoint: CGPoint) -> CGFloat {
         let firstAngle: CGFloat = atan2(firstPoint.y - center.y, firstPoint.x - center.x)
         let secondAngle: CGFloat = atan2(secondPoint.y - center.y, secondPoint.x - center.x)
@@ -895,18 +944,30 @@ extension FaceDetectionController {
         let outVertical = !(self.checkYPosInRange(currPos: currYPos))
         let outTilt = !(self.checkTiltInRange(currAngle: currAngle))
         
-        
-//        if ((outHorizontal || outVertical || outTilt) && !prevOutOfRange) {
-//            _ = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
-//                if (self.prevOutOfRange) {
-//                    if (self.vidIsOpen) {
-//                        // self.rootLayer?.isHidden = false
-//                    }
-//                }
-//            }
-//        }
+        if (autoCalSwitch.isOn) {
+            if ((outHorizontal || outVertical || outTilt) && !self.firstTimeOut) {
+                var runCount = 0
+                self.firstTimeOut = true
+                _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {timer in
+                    if (!self.autoCalSwitch.isOn) {
+                        timer.invalidate()
+                    }
+                    else if (self.isOut) {
+                        runCount += 1
+                    }
+                    else {
+                        timer.invalidate()
+                    }
+                    
+                    if (runCount >= Int(self.timeBetweenCalValue)) {
+                        self.doCalibration()
+                        timer.invalidate()
+                    }
+                }
+            }
+        }
         if (outHorizontal || outVertical || outTilt) {
-            prevOutOfRange = true
+            self.isOut = true
         }
         if (outHorizontal) {
             if (self.outLeft) {
@@ -991,7 +1052,8 @@ extension FaceDetectionController {
             if (self.vidIsOpen) {
                 videoView.playVideo()
             }
-            prevOutOfRange = false
+            self.firstTimeOut = false
+            self.isOut = false
         }
         
     }

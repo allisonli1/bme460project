@@ -14,7 +14,7 @@ class PlaylistSelectionViewController: UIViewController {
     var playlists =  [Playlist]()
     @IBOutlet weak var playlistLabel: UILabel!
     @IBOutlet weak var makePlaylistButton: UIButton!
-    
+    private var _data: [Playlist]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,12 +156,24 @@ class PlaylistSelectionViewController: UIViewController {
     
     private func savePlaylists() {
         print("Saving Playlists")
-        _ = NSKeyedArchiver.archiveRootObject(playlists, toFile: Playlist.ArchiveURL.path)
+        do {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: playlists, requiringSecureCoding: false)
+            try data.write(to: Playlist.ArchiveURL)
+        } catch {
+            print("Couldn't save")
+        }
+
+        // _ = NSKeyedArchiver.archiveRootObject(playlists, toFile: Playlist.ArchiveURL.path)
         
     }
     
     private func loadPlaylists() -> [Playlist]?  {
-        return NSKeyedUnarchiver.unarchiveObject(withFile: Playlist.ArchiveURL.path) as? [Playlist]
+        if _data != nil { return _data }
+        guard let codedData = try? Data(contentsOf: Playlist.ArchiveURL) else { return nil }
+        _data = try! NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(codedData) as? [Playlist]
+        return _data
+        
+        // return NSKeyedUnarchiver.unarchiveObject(withFile: Playlist.ArchiveURL.path) as? [Playlist]
     }
     
     func totDurToString(totDur: Int) -> String {
