@@ -188,40 +188,45 @@ extension SavePlaylistViewController {
     func getDurs() {
         var vidIDs = ""
         for video in self.videos {
-            vidIDs += video.videoID + ","
+            if video.duration == "" { // NEW CODE
+                // print("duration == nothing")
+                vidIDs += video.videoID + ","
+            } // NEW CODE
         }
+        if vidIDs != "" {
         vidIDs = String(vidIDs.dropLast())
-        // print("vidIDs: \(vidIDs)")
-        AF.request("https://www.googleapis.com/youtube/v3/videos",
-                   method: .get, parameters: ["key": API_KEY,
-                                              "part":"contentDetails",
-                                              "id":vidIDs])
-            .responseJSON { response in
-                        if let value = response.value as? [String: AnyObject] {
-                            for (_, key_value) in value.enumerated() {
-                                //print("key_value: \(key_value)")
-                                if let arr = key_value.value as? [[String: Any]] {
-                                    // print("arr: \(arr)")
-                                    for i in arr {
-                                        // print("i: \(i)")
-                                        let thisID = i["id"] as? String
-                                        if let contDet = i["contentDetails"] as? [String: Any] {
-                                            // print("contDet: \(contDet)")
-                                            // print("contDet[\"duration\"]: \(contDet["duration"]!)") // WORKS
-                                            let time_in_sec = self.convertPTtoSec(PT:contDet["duration"] as! String)
-                                            for vid in self.videos {
-                                                if vid.videoID == thisID {
-                                                    vid.setDuration(duration:time_in_sec)
+            // print("vidIDs: \(vidIDs)")
+            AF.request("https://www.googleapis.com/youtube/v3/videos",
+                       method: .get, parameters: ["key": API_KEY,
+                                                  "part":"contentDetails",
+                                                  "id":vidIDs])
+                .responseJSON { response in
+                            if let value = response.value as? [String: AnyObject] {
+                                for (_, key_value) in value.enumerated() {
+                                    //print("key_value: \(key_value)")
+                                    if let arr = key_value.value as? [[String: Any]] {
+                                        // print("arr: \(arr)")
+                                        for i in arr {
+                                            // print("i: \(i)")
+                                            let thisID = i["id"] as? String
+                                            if let contDet = i["contentDetails"] as? [String: Any] {
+                                                // print("contDet: \(contDet)")
+                                                // print("contDet[\"duration\"]: \(contDet["duration"]!)") // WORKS
+                                                let time_in_sec = self.convertPTtoSec(PT:contDet["duration"] as! String)
+                                                for vid in self.videos {
+                                                    if vid.videoID == thisID {
+                                                        vid.setDuration(duration:time_in_sec)
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
+                            self.updateTotDur()
                         }
-                        self.updateTotDur()
-                    }
-        print("Gets out of AF.request response")
+            print("Gets out of AF.request response")
+        }
     }
     
     func updateTotDur() {

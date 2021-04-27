@@ -183,9 +183,10 @@ extension SearchViewController {
                                                 }
                                             }
                                         }
-                                        if let contentDetails = i["contentDetails"] as? [String: Any] {
-                                            video.setDuration(duration: contentDetails["duration"] as! String)
-                                        }
+//                                        if let contentDetails = i["contentDetails"] as? [String: Any] {
+//                                            video.setDuration(duration: contentDetails["duration"] as! String)
+//                                        }
+                                        video.setDuration(duration:"")
                                         if let id = i["id"] as? [String: Any] {
                                             if id["kind"] as! String == "youtube#video" {
                                                 video.setVideoID(videoID: id["videoId"] as! String)
